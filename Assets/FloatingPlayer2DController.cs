@@ -5,7 +5,7 @@ using UnityStandardAssets.CrossPlatformInput;
 public class FloatingPlayer2DController : MonoBehaviour {
     public float moveForce = 5, boostMultiplier = 2;
     Rigidbody2D myBody;
-
+	//uvuidfvndfiunvdif
 	void Start () 
     {
         myBody = this.GetComponent<Rigidbody2D>();
