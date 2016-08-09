@@ -21,47 +21,47 @@ public class TitleController : MonoBehaviour {
     //メーニュー切り替え処理
 
     //ニューゲームボタン
-    public void NewGameButtonClicked() {
+    public void OnNewGameButtonClicked() {
         MenuPanel.SetActive( false );
         LevelSelectPanel.SetActive( true );
     }
 
     //レベル選択ボタン
-    public void LevelSelectButtonCliked() {
+    public void OnLevelSelectButtonCliked() {
         LevelSelectPanel.SetActive( false );
         StageSelectPanel.SetActive( true );
     }
 
     //オプションメーニュー選択ボタン
-    public void OptionButtonClicked() {
+    public void OnOptionButtonClicked() {
         MenuPanel.SetActive( false );
         OptionPanel.SetActive( true );
     }
 
     //言語選択メーニューボタン
-    public void LaunchButtonClicked() {
+    public void OnLaunchButtonClicked() {
         OptionPanel.SetActive( false );
         LaunchPanel.SetActive( true );
     }
 
     //文字サイズメーニュー選択ボタン
-    public void CharateButtonCliked() {
+    public void OnCharateButtonCliked() {
         OptionPanel.SetActive( false );
         CharatePanel.SetActive( true );
     }
 
     //音量選択メーニューボタン
-    public void VolumeButtonCliked() {
+    public void OnVolumeButtonCliked() {
         OptionPanel.SetActive( false );
         VolumePanel.SetActive( true );
     }
 	//レコードボタン
-	public void RecordButtonCliked() {
+	public void OnRecordButtonCliked() {
 		MenuPanel.SetActive( false );
 		RecordPanel.SetActive( true );
 	}
     //一個前メーニューに戻るボタン
-    public void OptionBackButtonCliked() {
+    public void OnOptionBackButton() {
         if ( LaunchPanel == true ) {
             LaunchPanel.SetActive( false );
         }
@@ -74,11 +74,11 @@ public class TitleController : MonoBehaviour {
         OptionPanel.SetActive( true );
     }    
 
-    public void StageSelectBackButtonCliked() {
+    public void OnStageSelectBackButtonCliked() {
         StageSelectPanel.SetActive( false );
         LevelSelectPanel.SetActive( true );
     }
-    public void StartButtonCliked() {
+    public void OnStartButtonCliked() {
 		StageSelectPanel.SetActive( false );
 		StageIntrodudePanel.SetActive( true );
     }
@@ -86,24 +86,24 @@ public class TitleController : MonoBehaviour {
 	public void TalkingScenePanelTouch() {
 		Application.LoadLevel ("Battle");
 	}
-	public void StageIntroduceGoButtonCliked() {
+	public void OnStageIntroduceNoButtonCliked() {
 		Application.LoadLevel ("Talking");
 	}
-	public void RecordSyagaButtonCliked() {
+	public void OnRecordSyagaButtonCliked() {
 		RecordPanel.SetActive( false );
 		CharacterIntrodudePanel.SetActive( true );
 	}
-	public void CharacterIntroduceBackButtonCliked() {
+	public void OnCharacterIntroduceBackButtonCliked() {
 		CharacterIntrodudePanel.SetActive (false);
 		RecordPanel.SetActive (true);
 	}
-	public void NotYetButtonClicked(){
+	public void OnNotYetButtonClicked(){
 		StageIntrodudePanel.SetActive (false);
 		StageSelectPanel.SetActive (true);
 	}
 
     //メインメーニューに戻るボタン
-    public void BackButtonCliked() {
+    public void OnBackButtonCliked() {
         LevelSelectPanel.SetActive( false );
         OptionPanel.SetActive( false );
 		RecordPanel.SetActive( false );

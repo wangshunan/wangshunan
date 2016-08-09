@@ -24,10 +24,10 @@ public class TextController : MonoBehaviour {
 		
 		SetNextLine ();
 	}
-
+	
 	// Update is called once per frame
 	void Update () {
-		
+
 		if (IsCompleteDisplayText) {		
 			if (currentLine < scenarios.Length && Input.GetMouseButtonDown (0)) {
 				SetNextLine ();
@@ -37,7 +37,7 @@ public class TextController : MonoBehaviour {
 				timeUntilDisplay = 0;
 			} 
 
-			if (currentText == scenarios [scenarios.Length - 1]) {
+			if (currentText == scenarios [4]) {
 				btn.SetActive (true);
 			}
 		} 

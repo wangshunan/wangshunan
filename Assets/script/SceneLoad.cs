@@ -10,14 +10,11 @@ public class SceneLoad : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	    if (Input.GetMouseButtonDown (0)){
 			Application.LoadLevel ("TitleMenu");
 		}
         Invoke("ReturnToTitle", 4.0f );
-
 	}
-
     void ReturnToTitle() {
 
         Application.LoadLevel ("TitleMenu");
