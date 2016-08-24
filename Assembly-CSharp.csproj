@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{F242978E-A116-DC26-6451-DAD851571DB9}</ProjectGuid>
+    <ProjectGuid>{1CF91E07-F164-FD5E-E014-35D5E3FB02BE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -45,8 +45,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\BattleSpriteAction.cs" />
+     <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\EmoteSpriteAction.cs" />
+     <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\SpriteAction.cs" />
      <Compile Include="Assets\script\BattleUiController.cs" />
      <Compile Include="Assets\script\EnemyController.cs" />
+     <Compile Include="Assets\script\EnemyController1.cs" />
      <Compile Include="Assets\script\GameLogic.cs" />
      <Compile Include="Assets\script\PlayerController.cs" />
      <Compile Include="Assets\script\ResultController.cs" />
@@ -54,6 +58,7 @@
      <Compile Include="Assets\script\TalkingBtn.cs" />
      <Compile Include="Assets\script\TextController.cs" />
      <Compile Include="Assets\script\TitleController.cs" />
+     <Compile Include="Assets\script\ZakoController.cs" />
      <Compile Include="Assets\script\sp.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

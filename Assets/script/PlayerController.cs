@@ -11,16 +11,20 @@ public class PlayerController : MonoBehaviour {
     public float speed;
     public float jumpPower;
     public float gravity;
-    public int hp = 4;
+	public int stamina;
+	public int bloodPressure;
+	GameObject[] enemy;
 
 	private SpriteRenderer spriteRenderer;
-	private float distanceCheck = 0.0f;
-	private const float hitDiretion = 1.0f;
+	private float distanceCheck = 2.0f;
+	private const float hitDiretion = 1.2f;
     // base layerで使われる、アニメーターの現在の状態の参照
     private AnimatorStateInfo currentBaseState;
     private float axis = 0.0f;
+
     
-    [SerializeField] private float characterHeightOffset = 0.2f;
+    [SerializeField]
+	EnemyController enemyController;
 
     // アニメーター各ステートへの参照
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
@@ -30,6 +34,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		enemy = GameObject.FindGameObjectsWithTag("Enemy");
         spriteRenderer = GetComponent<SpriteRenderer> ();
         animator = GetComponent<Animator>();
         rig2d = GetComponent<Rigidbody2D> ();
@@ -37,48 +42,56 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		
+		// 移動
         axis = Input.GetAxisRaw ("Horizontal");
         currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
-
-		    //　キャラを移動させる
-			if( axis != 0 && currentBaseState.fullPathHash != attack ) {
-                rig2d.transform.position += new Vector3( axis * speed * Time.deltaTime, 0 );  
-                animator.SetBool( "Run", true );
-			} else {
-                animator.SetBool( "Run", false );
+            //　キャラを移動させる
+            if (axis != 0 && currentBaseState.fullPathHash != attack)
+            {
+                rig2d.transform.position += new Vector3(axis * speed * Time.deltaTime, 0);
+                animator.SetBool("Run", true);
             }
-				
-			if( Input.GetKeyDown( KeyCode.Z ) && rig2d.velocity.y == 0 ) {
-                //distanceCheck = transform.position.x - target.gameObject.transform.position.x;
-                animator.SetTrigger( "Attack" );
-                //animator.SetBool( "Run", false );
-				/*if( ( distanceCheck < 0 && spriteRenderer.flipX == false ) ||
-                    ( distanceCheck > 0 && spriteRenderer.flipX == true ) ) {
-
-					if ((distanceCheck > 0 ? distanceCheck : -distanceCheck) < hitDiretion) {
-						/*if (target.gameObject.CompareTag ("Enemy")) {
-							Debug.Log ("Hit!!!");
-						}
-					}
-                }*/
+            else
+            {
+                animator.SetBool("Run", false);
             }
-	        if ( Input.GetButtonDown ("Jump") ) {
-		        rig2d.velocity = new Vector2 ( rig2d.velocity.x, jumpPower );
-                animator.SetBool( "Jump", true );
-	        }
+		// 攻撃
+		if (Input.GetKeyDown (KeyCode.Z) && rig2d.velocity.y == 0) {
+			animator.SetTrigger ("Attack");
+		}
 
-            if ( rig2d.velocity.y == 0 ) {
-                animator.SetBool( "Jump", false );
-            }
-
-        var distanceFromGround = Physics2D.Raycast ( transform.position, Vector3.down, 1, groundMask ); 
+		//　ジャンプ
+        if (Input.GetButtonDown("Jump") && currentBaseState.fullPathHash != jump )
+        {
+            rig2d.velocity = new Vector2(rig2d.velocity.x, jumpPower);
+            animator.SetBool("Jump", true);
+        }
+		if (rig2d.velocity.y == 0)
+        {
+            animator.SetBool("Jump", false);
+        }			
 
 
 		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
 			spriteRenderer.flipX = axis < 0;
         }
-        Debug.Log( "Y = " + rig2d.velocity.y );
-
     }
+
+	void AttackDecision() {
+		
+		enemy = GameObject.FindGameObjectsWithTag ("Enemy");
+		for (int i = 0; i < enemy.Length; i++) {
+			if (enemy [i].transform.position.x - transform.position.x < 1.0f) {
+				enemy [i].GetComponent<EnemyController> ().Damage ();
+			}
+		}
+	}
+
+	public void Damage( int damage ) {
+		bloodPressure += damage;
+		stamina -= damage;
+		Debug.Log ( "" + bloodPressure );
+		Debug.Log ( "" + stamina );
+	}
 }

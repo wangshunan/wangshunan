@@ -3,13 +3,11 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour {
 
-	[SerializeField]
-	PlayerController playerController;
-
 	Rigidbody2D EnemyRd;
     Animator animator;
         
 	public GameObject target;
+	public int atk = 1;
 
     // base layerで使われる、アニメーターの現在の状態の参照
     private AnimatorStateInfo currentBaseState;
@@ -22,9 +20,11 @@ public class EnemyController : MonoBehaviour {
 	const float HIT_DISTANCE = 1.0f;
     const float FIND_DISTANCE = 5.0f;
     float hitCount = 10.0f;
+	float timeCount = 0.0f;
 
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
     static int damage = Animator.StringToHash ( "Base Layer.Damage" );
+    static int dead = Animator.StringToHash( "Base Layer.Dead" );
 
 
 	void Start() {
@@ -41,7 +41,7 @@ public class EnemyController : MonoBehaviour {
 		EnemyX = transform.position.x;
 		distanceCheck = EnemyX - TargetX;
 
-        if ( currentBaseState.fullPathHash != damage ) {
+        if ( currentBaseState.fullPathHash != dead ) {
             if ( distanceCheck > 0.0f ) {
                 spriteRenderer.flipX = true ;
             } else { 
@@ -57,39 +57,26 @@ public class EnemyController : MonoBehaviour {
 
             } else if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE ) {
                 animator.SetTrigger( "Attack" );
+                animator.SetBool( "Run", false );
             } else {
                 animator.SetBool( "Run", false );
             }
         }
 
-        if ( Input.GetKeyDown( "x" ) ) {
-            animator.SetTrigger( "Damage" );
-            EnemyRd.velocity = new Vector2( 3.0f , 2.0f );
-        }
+		if ( currentBaseState.fullPathHash == dead ) {
+			timeCount++;
+		}
+		if ( timeCount == 60 ) {
+			Destroy ( gameObject );
+		}
+	}
 
+	public void Damage() {
+		animator.SetTrigger ( "Damage" );
+		EnemyRd.velocity = new Vector2 (3.0f, 2.0f);
+	}
 
-
-
-
-
-
-
-
-		/*if (TargetX > EnemyX) {
-			spriteRenderer.flipX = false;
-		} else {
-			spriteRenderer.flipX = true;
-
-		}*/
-
-		/*if (DistanceCheck > DISTANCE || DistanceCheck < -DISTANCE) {
-			EnemyRd.MovePosition (Vector2.Lerp (EnemyMove, target.transform.position, Time.deltaTime));
-			animator.SetBool ("Run", true);
-		} else {
-			animator.SetBool( "Run", false );
-			animator.SetTrigger ("Attack");
-		}*/
-
+	void AttackDecision() {
+		target.GetComponent<PlayerController> ().Damage (atk);
 	}
 }
-
