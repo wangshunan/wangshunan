@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -75,6 +69,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\BattleSpriteAction.cs" />
+    <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\EmoteSpriteAction.cs" />
+    <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\SpriteAction.cs" />
     <Compile Include="Assets\script\BattleUiController.cs" />
     <Compile Include="Assets\script\EnemyController.cs" />
     <Compile Include="Assets\script\GameLogic.cs" />
@@ -84,6 +81,7 @@
     <Compile Include="Assets\script\TalkingBtn.cs" />
     <Compile Include="Assets\script\TextController.cs" />
     <Compile Include="Assets\script\TitleController.cs" />
+    <Compile Include="Assets\script\ZakoController.cs" />
     <Compile Include="Assets\script\sp.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
