@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{EE08691A-A770-AD66-A5CA-0979B96414DE}") = "CaptianGai", "Assembly-CSharp.csproj", "{8AEC8639-38E2-2715-BE21-ACE64E53EEC0}"
+EndProject
+Project("{EE08691A-A770-AD66-A5CA-0979B96414DE}") = "CaptianGai", "Assembly-CSharp-Editor.csproj", "{3443C464-9FB8-2142-D637-FDEB39B450B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8AEC8639-38E2-2715-BE21-ACE64E53EEC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AEC8639-38E2-2715-BE21-ACE64E53EEC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AEC8639-38E2-2715-BE21-ACE64E53EEC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AEC8639-38E2-2715-BE21-ACE64E53EEC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3443C464-9FB8-2142-D637-FDEB39B450B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3443C464-9FB8-2142-D637-FDEB39B450B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3443C464-9FB8-2142-D637-FDEB39B450B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3443C464-9FB8-2142-D637-FDEB39B450B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class TextController : MonoBehaviour {
+
+	public SoundManager soundManager;
+
 	public GameObject btn;
 	public string[] scenarios;
 	[SerializeField]Text uiText;
@@ -30,11 +33,13 @@ public class TextController : MonoBehaviour {
 
 		if (IsCompleteDisplayText) {		
 			if (currentLine < scenarios.Length && Input.GetMouseButtonDown (0)) {
+				soundManager.PlaySeButton ();
 				SetNextLine ();
 			}
 		} else {
 			if (Input.GetMouseButtonDown (0)) {
 				timeUntilDisplay = 0;
+
 			} 
 
 			if (currentText == scenarios [4]) {

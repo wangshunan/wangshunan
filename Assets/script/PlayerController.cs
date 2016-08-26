@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
     Animator animator;
     Rigidbody2D rig2d;
     LayerMask groundMask;
+	public SoundManager soundManager;
 
     public float speed;
     public float jumpPower;
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour {
 		// 攻撃
 		if (Input.GetKeyDown (KeyCode.Z) && rig2d.velocity.y == 0) {
 			animator.SetTrigger ("Attack");
+			soundManager.PlaySePunch ();
 		}
 
 		//　ジャンプ
@@ -66,6 +68,7 @@ public class PlayerController : MonoBehaviour {
         {
             rig2d.velocity = new Vector2(rig2d.velocity.x, jumpPower);
             animator.SetBool("Jump", true);
+			soundManager.PlaySeJump ();
         }
 		if (rig2d.velocity.y == 0)
         {

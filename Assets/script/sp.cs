@@ -13,7 +13,7 @@ public class sp : MonoBehaviour {
 	    if (Input.GetMouseButtonDown (0)){
 			Application.LoadLevel ("Main");
 		}
-        Invoke("TitleMenu", 4.0f );
+      //  Invoke("TitleMenu", 4.0f );
 
 	}
 }

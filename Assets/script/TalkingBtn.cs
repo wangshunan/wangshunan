@@ -3,17 +3,15 @@ using System.Collections;
 
 public class TalkingBtn : MonoBehaviour {
 	public GameObject startBtn;
+	public SoundManager soundManager;
 
-	public void OnStartBtnClicked(){
+	public void LoadSceneBattle() {
 		Application.LoadLevel("Battle");
 	}
-	// Use this for initialization
-	void Start () {
-	
+
+	public void OnStartBtnClicked(){
+		Invoke ("LoadSceneBattle", 1);
+		soundManager.PlaySeGameStart ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }
