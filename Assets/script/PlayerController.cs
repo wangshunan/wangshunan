@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour {
         }      
 		if (Input.GetKeyDown (KeyCode.Z) && rig2d.velocity.y == 0) {
 			animator.SetTrigger ("Attack");
-			soundManager.PlaySePunch ();
+			//soundManager.PlaySePunch ();
 		}
 
 		//　ジャンプ
@@ -76,8 +76,7 @@ public class PlayerController : MonoBehaviour {
         {
             rig2d.velocity = new Vector2(rig2d.velocity.x, jumpPower);
             animator.SetBool( "Jump", true );
-            animator.SetBool("Jump", true);
-			soundManager.PlaySeJump ();
+			//soundManager.PlaySeJump ();
         }
 		if ( rig2d.velocity.y == 0 )
         {

@@ -86,6 +86,7 @@
     <Compile Include="Assets\script\TalkingBtn.cs" />
     <Compile Include="Assets\script\TextController.cs" />
     <Compile Include="Assets\script\TitleController.cs" />
+    <Compile Include="Assets\script\ZakoController.cs" />
     <Compile Include="Assets\script\sp.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
