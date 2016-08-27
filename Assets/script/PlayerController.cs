@@ -9,8 +9,8 @@ public class PlayerController : MonoBehaviour {
     LayerMask groundMask;
 	public SoundManager soundManager;
 
-    public float speed;
-    public float jumpPower;
+    private float speed;
+    private float jumpPower;
     public float gravity;
 	public float stamina;
 	public float bloodPressure;
@@ -21,16 +21,19 @@ public class PlayerController : MonoBehaviour {
     GameObject[] item;
 
 	private SpriteRenderer spriteRenderer;
-	private float distanceCheck = 0.0f;
+	private float distanceCheckX = 0.0f;
+	private float distanceCheckY = 0.0f;
 	private const float HITDIRETION = 1.1f;
     // base layerで使われる、アニメーターの現在の状態の参照
     private AnimatorStateInfo currentBaseState;
     private float axis = 0.0f;
-    private const float STAMINACONSUME = 1.0f;
+    private const float STAMINACONSUME = 10.0f;
     private bool hypertension = false;
     private bool reduceBloodPress = false;
     private float hypertensionSpeed;
     private float healthSpeed;
+	private float hypertensionJumpPower;
+	private float healthJumpPower;
 
     // アニメーター各ステートへの参照
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
@@ -44,8 +47,7 @@ public class PlayerController : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer> ();
         animator = GetComponent<Animator>();
         rig2d = GetComponent<Rigidbody2D> ();
-        hypertensionSpeed = 1.5f;
-        healthSpeed = 3.0f;
+		Initialization ();
 	}
 	
 	// Update is called once per frame
@@ -63,13 +65,11 @@ public class PlayerController : MonoBehaviour {
         }
 		// 攻撃
 		if ( Input.GetKeyDown( KeyCode.Z ) && rig2d.velocity.y == 0 && currentBaseState.fullPathHash != attack ) {
-			animator.SetTrigger ( "Attack" );
-            staminaSlider.value -= STAMINACONSUME;
+			if (staminaSlider.value > 0) {
+				animator.SetTrigger ("Attack");
+				staminaSlider.value -= STAMINACONSUME;
+			}
         }      
-		if (Input.GetKeyDown (KeyCode.Z) && rig2d.velocity.y == 0) {
-			animator.SetTrigger ("Attack");
-			//soundManager.PlaySePunch ();
-		}
 
 		//　ジャンプ
         if ( Input.GetButtonDown( "Jump" ) && currentBaseState.fullPathHash != jump )
@@ -89,8 +89,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         if(  booldPressureSlider.value < 50.0f && reduceBloodPress == false ) {
-            reduceBloodPress = true;
-            BloodPressureSystem();
+			Initialization ();
         }
 
         ItemDecision( );
@@ -107,18 +106,18 @@ public class PlayerController : MonoBehaviour {
 		block = GameObject.FindGameObjectsWithTag ( "Block" );
 		enemy = GameObject.FindGameObjectsWithTag ( "Enemy" );
 		for ( int i = 0; i < enemy.Length; i++ ) {        
-            distanceCheck = enemy[ i ].transform.position.x - transform.position.x;
-			if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HITDIRETION && 
+            distanceCheckX = enemy[ i ].transform.position.x - transform.position.x;
+			if ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION && 
                    spriteRenderer.flipX != enemy[ i ].GetComponent< SpriteRenderer >().flipX ) {
 				enemy[i].GetComponent<EnemyController> ().Damage ();
 			}
 		}
 
 		for ( int i = 0; i < block.Length; i++ ) {
-            distanceCheck = block[ i ].transform.position.x - transform.position.x;         
-			if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HITDIRETION + 0.5f ) {
-                if ( ( distanceCheck > 0 && spriteRenderer.flipX == false ) || 
-                     ( distanceCheck < 0 && spriteRenderer.flipX == true ) ) {
+            distanceCheckX = block[ i ].transform.position.x - transform.position.x;         
+			if ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION + 0.5f ) {
+                if ( ( distanceCheckX > 0 && spriteRenderer.flipX == false ) || 
+                     ( distanceCheckX < 0 && spriteRenderer.flipX == true ) ) {
 				    block[i].GetComponent<BlockController> ().BlockDestroy ();
                 }
 			}
@@ -129,28 +128,39 @@ public class PlayerController : MonoBehaviour {
     private void BloodPressureSystem() {
         if( hypertension == true ) {
             speed = hypertensionSpeed;
-            jumpPower = jumpPower / 2.0f;
-            reduceBloodPress = false;
+			jumpPower = hypertensionJumpPower;
         }
 
-        if( reduceBloodPress == true ) {
-            speed = healthSpeed;
-            jumpPower = jumpPower + jumpPower;
-            hypertension = false;
-        }
     }
 
     private void ItemDecision() {
-        item = GameObject.FindGameObjectsWithTag("medicine");
+        item = GameObject.FindGameObjectsWithTag("item");
         for ( int i = 0; i < item.Length; i++ ) {
-            distanceCheck = item[ i ].transform.position.x - transform.position.x;   
-            if( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HITDIRETION ) {
-                Destroy( item[ i ].gameObject );
-                booldPressureSlider.value -= 50;
+            distanceCheckX = item[ i ].transform.position.x - transform.position.x;
+			distanceCheckY = transform.position.y - item[ i ].transform.position.y;
+			if( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION - 0.5f ) &&
+				    distanceCheckY <= 0.9f ) {
+				if (item [i].gameObject.layer == 12) {
+					booldPressureSlider.value -= 50;
+					Initialization ();
+				}
+				if (item [i].gameObject.layer == 13) {
+					booldPressureSlider.value += 10;
+					staminaSlider.value += 50;
+				}
+				Destroy( item[ i ].gameObject );
             }
         }
     }
 
+	private void Initialization() {
+		hypertensionSpeed = 1.5f;
+		healthSpeed = 3.0f;
+		hypertensionJumpPower = 3.5f;
+		healthJumpPower = 7.0f;
+		speed = healthSpeed;
+		jumpPower = healthJumpPower;
+	}
 
 	public void Damage( float damage ) {
 		booldPressureSlider.value += damage;

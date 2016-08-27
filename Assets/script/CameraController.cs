@@ -15,8 +15,6 @@ public class CameraController : MonoBehaviour {
     }
 
     void LateUpdate () {
-        if( m_target.transform.position.x >= transform.position.x ) {
-		    transform.position = new Vector3 ( m_target.gameObject.transform.position.x, transform.position.y, transform.position.z );
-        }
+		transform.position = new Vector3 ( m_target.gameObject.transform.position.x, transform.position.y, transform.position.z );
     }
 }

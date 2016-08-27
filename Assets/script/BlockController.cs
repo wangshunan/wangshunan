@@ -18,7 +18,9 @@ public class BlockController : MonoBehaviour {
 
     public void BlockDestroy() {
         animator.SetTrigger( "Destroy" );
-        gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
-        gameObject.GetComponent<BoxCollider2D>().enabled = false;
     }
+
+	void BlockPhysics() {
+		gameObject.GetComponent<BoxCollider2D> ().enabled = false;
+	}
 }
