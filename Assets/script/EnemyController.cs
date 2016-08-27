@@ -6,21 +6,23 @@ public class EnemyController : MonoBehaviour {
 	Rigidbody2D EnemyRd;
     Animator animator;
         
-	public GameObject target;
-	public int atk = 1;
+	
+	public float atk = 1;
 
     // base layerで使われる、アニメーターの現在の状態の参照
     private AnimatorStateInfo currentBaseState;
     private SpriteRenderer spriteRenderer;
+    private GameObject target;
 
 	float TargetX;
 	float EnemyX;
-	float distanceCheck;
+	private float distanceCheck;
 	float moveSpeed = 1.0f;
 	const float HIT_DISTANCE = 1.0f;
     const float FIND_DISTANCE = 5.0f;
     float hitCount = 10.0f;
 	float timeCount = 0.0f;
+
 
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
     static int damage = Animator.StringToHash ( "Base Layer.Damage" );
@@ -41,7 +43,7 @@ public class EnemyController : MonoBehaviour {
 		EnemyX = transform.position.x;
 		distanceCheck = EnemyX - TargetX;
 
-        if ( currentBaseState.fullPathHash != dead ) {
+        if ( currentBaseState.fullPathHash != dead && currentBaseState.fullPathHash != damage ) {
             if ( distanceCheck > 0.0f ) {
                 spriteRenderer.flipX = true ;
             } else { 
@@ -73,10 +75,16 @@ public class EnemyController : MonoBehaviour {
 
 	public void Damage() {
 		animator.SetTrigger ( "Damage" );
-		EnemyRd.velocity = new Vector2 (3.0f, 2.0f);
+        if( currentBaseState.fullPathHash != damage && currentBaseState.fullPathHash != dead ) {
+		    EnemyRd.velocity = new Vector2 ( distanceCheck > 0 ? 3.0f : -3.0f, 2.0f);
+        }
 	}
 
 	void AttackDecision() {
-		target.GetComponent<PlayerController> ().Damage (atk);
+        distanceCheck = target.transform.position.x - transform.position.x;
+        if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE && 
+               spriteRenderer.flipX != target.GetComponent< SpriteRenderer >().flipX ) {
+		    target.GetComponent<PlayerController> ().Damage (atk);
+        }
 	}
 }
