@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour {
         axis = Input.GetAxisRaw ( "Horizontal" );
         currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
             //　キャラを移動させる
-        if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
+		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
             rig2d.transform.position += new Vector3(axis * speed * Time.deltaTime, 0);
             animator.SetBool( "Run", true );
         } else {
@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour {
 		//　ジャンプ
         if ( Input.GetButtonDown( "Jump" ) && currentBaseState.fullPathHash != jump )
         {
-            rig2d.velocity = new Vector2(rig2d.velocity.x, jumpPower);
+            rig2d.velocity = new Vector2(rig2d.velocity.x, jumpPower + 5);
             animator.SetBool( "Jump", true );
 			//soundManager.PlaySeJump ();
         }
@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour {
 			if ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION + 0.5f ) {
                 if ( ( distanceCheckX > 0 && spriteRenderer.flipX == false ) || 
                      ( distanceCheckX < 0 && spriteRenderer.flipX == true ) ) {
-				    block[i].GetComponent<BlockController> ().BlockDestroy ();
+				    block[i].GetComponent<BlockController> ().BlockDestroyAni ();
                 }
 			}
 		}

@@ -16,9 +16,12 @@ public class BlockController : MonoBehaviour {
 	void Update () {           
 	}
 
-    public void BlockDestroy() {
+    public void BlockDestroyAni() {
         animator.SetTrigger( "Destroy" );
     }
+	void BlokDestroy() {
+		Destroy (gameObject);
+	}
 
 	void BlockPhysics() {
 		gameObject.GetComponent<BoxCollider2D> ().enabled = false;
