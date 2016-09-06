@@ -20,14 +20,15 @@ public class PlayerController : MonoBehaviour {
     GameObject[] block;
     GameObject[] item;
 
+    private const float HITDIRETION = 1.1f;
+    private const float STAMINACONSUME = 10.0f;
+
 	private SpriteRenderer spriteRenderer;
 	private float distanceCheckX = 0.0f;
 	private float distanceCheckY = 0.0f;
-	private const float HITDIRETION = 1.1f;
     // base layerで使われる、アニメーターの現在の状態の参照
     private AnimatorStateInfo currentBaseState;
     private float axis = 0.0f;
-    private const float STAMINACONSUME = 10.0f;
     private bool hypertension = false;
     private bool reduceBloodPress = false;
     private float hypertensionSpeed;
@@ -87,6 +88,10 @@ public class PlayerController : MonoBehaviour {
             hypertension = true;
             BloodPressureSystem();
         }
+        if (booldPressureSlider.value >= 70.0f && hypertension == true )
+        {
+            hypertension = false;
+        }
 
         if(  booldPressureSlider.value < 50.0f && reduceBloodPress == false ) {
 			Initialization ();
@@ -98,6 +103,7 @@ public class PlayerController : MonoBehaviour {
 		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
 			spriteRenderer.flipX = axis < 0;
         }
+
         
     }
 
@@ -107,15 +113,20 @@ public class PlayerController : MonoBehaviour {
 		enemy = GameObject.FindGameObjectsWithTag ( "Enemy" );
 		for ( int i = 0; i < enemy.Length; i++ ) {        
             distanceCheckX = enemy[ i ].transform.position.x - transform.position.x;
-			if ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION && 
-                   spriteRenderer.flipX != enemy[ i ].GetComponent< SpriteRenderer >().flipX ) {
-				enemy[i].GetComponent<EnemyController> ().Damage ();
+            distanceCheckY = enemy[ i ].transform.position.y - transform.position.y;
+			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION ) &&
+                 ( ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= HITDIRETION ) ) {
+                if ( spriteRenderer.flipX != enemy[i].GetComponent<SpriteRenderer>().flipX ) {
+                    enemy[i].GetComponent<EnemyController>().Damage();
+                }
 			}
 		}
 
 		for ( int i = 0; i < block.Length; i++ ) {
-            distanceCheckX = block[ i ].transform.position.x - transform.position.x;         
-			if ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION + 0.5f ) {
+            distanceCheckX = block[ i ].transform.position.x - transform.position.x;
+            distanceCheckY = block[ i ].transform.position.y - transform.position.y;
+			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION + 0.5f ) && 
+                 ( ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= HITDIRETION ) ) {
                 if ( ( distanceCheckX > 0 && spriteRenderer.flipX == false ) || 
                      ( distanceCheckX < 0 && spriteRenderer.flipX == true ) ) {
 				    block[i].GetComponent<BlockController> ().BlockDestroyAni ();
@@ -126,9 +137,15 @@ public class PlayerController : MonoBehaviour {
 	}
 
     private void BloodPressureSystem() {
+
         if( hypertension == true ) {
             speed = hypertensionSpeed;
-			jumpPower = hypertensionJumpPower;
+
+            if ( booldPressureSlider.value >= 70.0f ) {
+                jumpPower = 0;
+            } else {
+                jumpPower = hypertensionJumpPower;
+            }
         }
 
     }
@@ -140,12 +157,12 @@ public class PlayerController : MonoBehaviour {
 			distanceCheckY = transform.position.y - item[ i ].transform.position.y;
 			if( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION - 0.5f ) &&
 				    distanceCheckY <= 0.9f ) {
-				if (item [i].gameObject.layer == 12) {
+				if ( item [i].gameObject.layer == 12 ) {
 					booldPressureSlider.value -= 50;
 					Initialization ();
 				}
-				if (item [i].gameObject.layer == 13) {
-					booldPressureSlider.value += 10;
+				if ( item [i].gameObject.layer == 13 ) {
+					booldPressureSlider.value += 50;
 					staminaSlider.value += 50;
 				}
 				Destroy( item[ i ].gameObject );
@@ -153,13 +170,14 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-	private void Initialization() {
+	private void Initialization( ) {
 		hypertensionSpeed = 1.5f;
 		healthSpeed = 3.0f;
 		hypertensionJumpPower = 3.5f;
 		healthJumpPower = 7.0f;
 		speed = healthSpeed;
 		jumpPower = healthJumpPower;
+        hypertension = false;
 	}
 
 	public void Damage( float damage ) {

@@ -14,7 +14,7 @@ public class GameLogic : MonoBehaviour {
 	void Update () {
 		enemy = GameObject.FindGameObjectsWithTag("Enemy");
 		if (enemy.Length == 0) {
-			Application.LoadLevel ("Result");
+			//Application.LoadLevel ("Result");
 		}
 	}
 
