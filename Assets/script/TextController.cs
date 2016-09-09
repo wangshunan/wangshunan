@@ -5,8 +5,10 @@ using UnityEngine.UI;
 public class TextController : MonoBehaviour {
 
 	public SoundManager soundManager;
+	public VoiceManager voiceManager;
 
 	public GameObject btn;
+	public GameObject vodke;
 	public string[] scenarios;
 	[SerializeField]Text uiText;
 
@@ -18,6 +20,7 @@ public class TextController : MonoBehaviour {
 	private float timeUntilDisplay = 0;
 	private float timeElapsed = 1;
 	private int lastUpdateCharacter = -1;
+	private int count = 1;                    //Screenを押すカウント
 
 	public bool IsCompleteDisplayText {
 		get{ return Time.time > timeElapsed + timeUntilDisplay;}	
@@ -26,15 +29,22 @@ public class TextController : MonoBehaviour {
 	void Start () {
 		
 		SetNextLine ();
+		voiceManager.PlayVoice(count);
+		vodke = GameObject.Find ("Vodke");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-		if (IsCompleteDisplayText) {		
+		if (IsCompleteDisplayText) {
+			
 			if (currentLine < scenarios.Length && Input.GetMouseButtonDown (0)) {
+				count++;
+				voiceManager.PlayVoice (count);
 				soundManager.PlaySeButton ();
 				SetNextLine ();
+			}
+			if (count == 11) {
+				vodke.SetActive (false);
 			}
 		} else {
 			if (Input.GetMouseButtonDown (0)) {
@@ -42,7 +52,7 @@ public class TextController : MonoBehaviour {
 
 			} 
 
-			if (currentText == scenarios [4]) {
+			if (currentText == scenarios [14]) {
 				btn.SetActive (true);
 			}
 		} 
