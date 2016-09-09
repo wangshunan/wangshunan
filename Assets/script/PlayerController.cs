@@ -4,13 +4,14 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
+
     Animator animator;
     Rigidbody2D rig2d;
-    LayerMask groundMask;
 	public SoundManager soundManager;
 
     private float speed;
     private float jumpPower;
+    private int atk = 10;
     public float gravity;
 	public float stamina;
 	public float bloodPressure;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour {
 	GameObject[] enemy;
     GameObject[] block;
     GameObject[] item;
+    GameObject boss;
 
     private const float HITDIRETION = 1.1f;
     private const float STAMINACONSUME = 10.0f;
@@ -65,7 +67,8 @@ public class PlayerController : MonoBehaviour {
             animator.SetBool( "Run", false );
         }
 		// 攻撃
-		if ( Input.GetKeyDown( KeyCode.Z ) && rig2d.velocity.y == 0 && currentBaseState.fullPathHash != attack ) {
+		if ( Input.GetKeyDown( KeyCode.Z ) && currentBaseState.fullPathHash != jump && currentBaseState.fullPathHash != attack ) {
+            Debug.Log( "!!!!" );
 			if (staminaSlider.value > 0) {
 				animator.SetTrigger ("Attack");
 				staminaSlider.value -= STAMINACONSUME;
@@ -109,18 +112,28 @@ public class PlayerController : MonoBehaviour {
 
 	private void AttackDecision() {
 
+        boss = GameObject.Find( "Vodke" );
 		block = GameObject.FindGameObjectsWithTag ( "Block" );
 		enemy = GameObject.FindGameObjectsWithTag ( "Enemy" );
-		for ( int i = 0; i < enemy.Length; i++ ) {        
+		for ( int i = 1; i < enemy.Length; i++ ) {        
             distanceCheckX = enemy[ i ].transform.position.x - transform.position.x;
             distanceCheckY = enemy[ i ].transform.position.y - transform.position.y;
 			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION ) &&
                  ( ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= HITDIRETION ) ) {
                 if ( spriteRenderer.flipX != enemy[i].GetComponent<SpriteRenderer>().flipX ) {
-                    enemy[i].GetComponent<EnemyController>().Damage();
+                    enemy[ i ].GetComponent<EnemyController>().Damage();
                 }
 			}
 		}
+      
+            distanceCheckX = boss.transform.position.x - transform.position.x;
+            distanceCheckY = boss.transform.position.y - transform.position.y;
+			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION ) &&
+                 ( ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= HITDIRETION ) ) {
+                if ( spriteRenderer.flipX != boss.GetComponent<SpriteRenderer>().flipX ) {
+                    boss.GetComponent<BossController>().Damage( atk );
+                }
+			}
 
 		for ( int i = 0; i < block.Length; i++ ) {
             distanceCheckX = block[ i ].transform.position.x - transform.position.x;
@@ -130,6 +143,7 @@ public class PlayerController : MonoBehaviour {
                 if ( ( distanceCheckX > 0 && spriteRenderer.flipX == false ) || 
                      ( distanceCheckX < 0 && spriteRenderer.flipX == true ) ) {
 				    block[i].GetComponent<BlockController> ().BlockDestroyAni ();
+                    Debug.Log( "" + i );
                 }
 			}
 		}
@@ -171,7 +185,7 @@ public class PlayerController : MonoBehaviour {
     }
 
 	private void Initialization( ) {
-		hypertensionSpeed = 1.5f;
+		hypertensionSpeed = 2.0f;
 		healthSpeed = 3.0f;
 		hypertensionJumpPower = 3.5f;
 		healthJumpPower = 7.0f;

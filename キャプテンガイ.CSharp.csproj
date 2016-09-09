@@ -58,6 +58,12 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -74,9 +80,9 @@
     <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\SpriteAction.cs" />
     <Compile Include="Assets\script\BattleUiController.cs" />
     <Compile Include="Assets\script\BlockController.cs" />
+    <Compile Include="Assets\script\BossController.cs" />
     <Compile Include="Assets\script\CameraController.cs" />
     <Compile Include="Assets\script\EnemyController.cs" />
-    <Compile Include="Assets\script\EnemyController1.cs" />
     <Compile Include="Assets\script\GameLogic.cs" />
     <Compile Include="Assets\script\ItemController.cs" />
     <Compile Include="Assets\script\PlayerController.cs" />

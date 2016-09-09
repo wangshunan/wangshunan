@@ -3,7 +3,9 @@ using System.Collections;
 
 public class BlockController : MonoBehaviour {
 
+    [SerializeField]
     SpriteRenderer spriteRenderer;
+    [SerializeField]
     Animator animator;
 
 	// Use this for initialization
