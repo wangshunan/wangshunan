@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour {
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
     static int run = Animator.StringToHash ( "Base Layer.Run" );
     static int jump = Animator.StringToHash( "Base Layer.Jump" );
+    static int passive = Animator.StringToHash( "Base Layer.Passiveness" );
 
 
 	// Use this for initialization
@@ -55,10 +56,23 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-		// 移動
-        axis = Input.GetAxisRaw ( "Horizontal" );
+		axis = Input.GetAxisRaw ( "Horizontal" );
         currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
+        staminaSlider.value += 1 * Time.deltaTime;
+        if ( currentBaseState.fullPathHash == passive && rig2d.velocity.y == 0.0f ) {
+            animator.SetBool( "Passiveness", false );
+        }
+
+        if ( currentBaseState.fullPathHash != passive ) {
+            Controller( );
+        }
+        ItemDecision( );
+
+        
+    }
+
+    void Controller( ) {
+
             //　キャラを移動させる
 		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
             rig2d.transform.position += new Vector3(axis * speed * Time.deltaTime, 0);
@@ -69,7 +83,7 @@ public class PlayerController : MonoBehaviour {
 		// 攻撃
 		if ( Input.GetKeyDown( KeyCode.Z ) && currentBaseState.fullPathHash != jump && currentBaseState.fullPathHash != attack ) {
             Debug.Log( "!!!!" );
-			if (staminaSlider.value > 0) {
+			if ( staminaSlider.value > 10.0f ) {
 				animator.SetTrigger ("Attack");
 				staminaSlider.value -= STAMINACONSUME;
 			}
@@ -100,14 +114,9 @@ public class PlayerController : MonoBehaviour {
 			Initialization ();
         }
 
-        ItemDecision( );
-
-
 		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
 			spriteRenderer.flipX = axis < 0;
         }
-
-        
     }
 
 	private void AttackDecision() {
@@ -115,7 +124,7 @@ public class PlayerController : MonoBehaviour {
         boss = GameObject.Find( "Vodke" );
 		block = GameObject.FindGameObjectsWithTag ( "Block" );
 		enemy = GameObject.FindGameObjectsWithTag ( "Enemy" );
-		for ( int i = 1; i < enemy.Length; i++ ) {        
+		for ( int i = 0; i < enemy.Length; i++ ) {        
             distanceCheckX = enemy[ i ].transform.position.x - transform.position.x;
             distanceCheckY = enemy[ i ].transform.position.y - transform.position.y;
 			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION ) &&
@@ -126,14 +135,14 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
       
-            distanceCheckX = boss.transform.position.x - transform.position.x;
+            /*distanceCheckX = boss.transform.position.x - transform.position.x;
             distanceCheckY = boss.transform.position.y - transform.position.y;
 			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION ) &&
                  ( ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= HITDIRETION ) ) {
                 if ( spriteRenderer.flipX != boss.GetComponent<SpriteRenderer>().flipX ) {
                     boss.GetComponent<BossController>().Damage( atk );
                 }
-			}
+			}*/
 
 		for ( int i = 0; i < block.Length; i++ ) {
             distanceCheckX = block[ i ].transform.position.x - transform.position.x;
@@ -185,7 +194,7 @@ public class PlayerController : MonoBehaviour {
     }
 
 	private void Initialization( ) {
-		hypertensionSpeed = 2.0f;
+		hypertensionSpeed = 10.0f;
 		healthSpeed = 3.0f;
 		hypertensionJumpPower = 3.5f;
 		healthJumpPower = 7.0f;
@@ -200,4 +209,9 @@ public class PlayerController : MonoBehaviour {
 		    staminaSlider.value -= damage;
         }
 	}
+
+    public void Passiveness( ) {
+        animator.SetBool( "Passiveness", true );
+        rig2d.velocity = new Vector2( -4.0f, 2.0f );
+    }
 }

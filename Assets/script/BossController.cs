@@ -8,7 +8,11 @@ public class BossController : MonoBehaviour {
 	Rigidbody2D EnemyRd;
     Animator animator;
         
-	
+	enum PATTERN{
+        USUALLY,
+        SKILL
+    };
+
 	public float atk = 1;
     public Slider hpSlider;
 
@@ -20,15 +24,20 @@ public class BossController : MonoBehaviour {
 	float TargetX;
 	float EnemyX;
 	private float distanceCheck;
+    private float passivenessCount = 0.0f;
 	float moveSpeed = 1.0f;
 	const float HIT_DISTANCE = 1.5f;
     const float FIND_DISTANCE = 5.0f;
     float hitCount = 10.0f;
 	float timeCount = 0.0f;
+    private int pattern;
+    private bool skill;
+    private bool a = false;
+    private bool skillSuitchi = false;
 
 
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
-    static int attack2 = Animator.StringToHash ( "Base Layer.Attack2" );
+    static int attack2 = Animator.StringToHash ( "Base Layer.Rush" );
     static int damage = Animator.StringToHash ( "Base Layer.Damage" );
     static int jump = Animator.StringToHash ( "Base Layer.Jump" );
     //static int dead = Animator.StringToHash( "Base Layer.Dead" );
@@ -39,6 +48,7 @@ public class BossController : MonoBehaviour {
 		target = GameObject.Find ("Cguy");
 		EnemyRd = GetComponent<Rigidbody2D> ();
 		spriteRenderer = GetComponent<SpriteRenderer> ();
+        pattern = (int) PATTERN.USUALLY;
 	}
 
 	void Update() {
@@ -47,8 +57,38 @@ public class BossController : MonoBehaviour {
 		TargetX = target.transform.position.x;
 		EnemyX = transform.position.x;
 		distanceCheck = EnemyX - TargetX;
+        
+        switch( pattern ) {
+            case 0:
+            Usually( );
+                break;
+            case 1:
+                Skill( );
+                break;
+        }
 
-        if ( /*currentBaseState.fullPathHash != dead &&*/ currentBaseState.fullPathHash != damage ) {
+	}
+
+	public void Damage( float damage ) {
+
+        hpSlider.value -= damage;
+        if ( hpSlider.value <= 50.0f && skillSuitchi == false ) {  
+            pattern = ( int )PATTERN.SKILL;
+            skillSuitchi = true;
+        } else {
+	        animator.SetTrigger ( "Damage" );
+            passivenessCount += 1;
+            if( passivenessCount >= 3.0f ) {
+		        EnemyRd.velocity = new Vector2 ( distanceCheck > 0 ? 5.0f : -5.0f, 5.0f);
+                passivenessCount = 0.0f;
+            }
+        }
+	}
+
+    void Usually( ) {
+
+        if (  currentBaseState.fullPathHash != damage && currentBaseState.fullPathHash != attack ) {
+
             if ( distanceCheck > 0.0f ) {
                 spriteRenderer.flipX = true ;
             } else { 
@@ -57,49 +97,58 @@ public class BossController : MonoBehaviour {
 
             if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) > HIT_DISTANCE && 
                  ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= FIND_DISTANCE && 
-                   currentBaseState.fullPathHash != attack2 ) {
+                   currentBaseState.fullPathHash != attack2 &&
+                   currentBaseState.fullPathHash != jump ) {
 
                 EnemyRd.transform.position += new Vector3( ( spriteRenderer.flipX == true ?  -moveSpeed : moveSpeed ) * Time.deltaTime, 0 );
                 animator.SetBool( "Walk", true );
 
             } else if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE ) {
-                animator.SetTrigger( "Attack2" );
+                animator.SetTrigger( "Attack" );
                 animator.SetBool( "Walk", false );
             } else {
                 animator.SetBool( "Walk", false );
             }
         }
 
-        if( Input.GetKeyDown( "b" ) ) {
+    }
+
+    void Skill( ) {
+
+        if( a == false ) {
             animator.SetTrigger( "Jump" );
             EnemyRd.velocity = new Vector2 ( distanceCheck > 0 ? 3.0f : -3.0f, 5.0f);
-            if( currentBaseState.fullPathHash != jump ) {
-                animator.SetBool( "Rush", true );
-                EnemyRd.velocity = new Vector2( -10.0f, 0.0f );
-            }
+            skill = true;
+            a = true;
         }
 
-		/*if ( currentBaseState.fullPathHash == dead ) {
-			timeCount++;
-		}
-		if ( timeCount == 60 ) {
-			Destroy ( gameObject );
-		}*/
-	}
+        if( EnemyRd.velocity.y == 0.0f && skill == true ) {
+            animator.SetBool( "Rush", true );
+            EnemyRd.velocity = new Vector2( distanceCheck > 0 ? -7.0f : 7.0f, 0.0f );
+            skill = false;
+        }
 
-	public void Damage( float damage ) {
-		animator.SetTrigger ( "Damage" );
-        //if( currentBaseState.fullPathHash != damage && currentBaseState.fullPathHash != dead ) {
-		    EnemyRd.velocity = new Vector2 ( distanceCheck > 0 ? 3.0f : -3.0f, 2.0f);
-        //}
-        hpSlider.value -= damage;
-	}
 
-	void AttackDecision() {
+        if ( EnemyRd.velocity.x == 0.0f && EnemyRd.velocity.y == 0.0f ) {
+            animator.SetBool( "Rush", false );
+            pattern = (int)PATTERN.USUALLY;
+        }
+
+    }
+	void AttackDecision( ) {
         distanceCheck = target.transform.position.x - transform.position.x;
         if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE && 
-               spriteRenderer.flipX != target.GetComponent< SpriteRenderer >().flipX ) {
+            spriteRenderer.flipX != target.GetComponent< SpriteRenderer >().flipX ) {
 		    target.GetComponent<PlayerController> ().Damage (atk);
         }
 	}
+
+    void RushDecision( ) {
+
+        distanceCheck = target.transform.position.x - transform.position.x;
+        if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE - 0.2f  ) { 
+            target.GetComponent<PlayerController> ().Passiveness ( );
+            target.GetComponent<PlayerController> ().Damage (atk);
+        }
+    }
 }
