@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class SoundManager : MonoBehaviour {
-
+	
 	private AudioSource BgmMenuOne;
 	private AudioSource BgmMenuTwo;
 	private AudioSource BgmZako;
@@ -11,9 +11,10 @@ public class SoundManager : MonoBehaviour {
 	private AudioSource SeGameStart;
 	private AudioSource SePunch;
 	private AudioSource SeJump;
+	private AudioSource SeBlock;
 
 	void Start() {
-		AudioSource[] audioSources = GetComponents<AudioSource>();
+		AudioSource[] audioSources = GetComponents<AudioSource> ();
 		BgmMenuOne = audioSources [0];
 		SeButton = audioSources [1];
 		SeBack = audioSources [2];
@@ -22,6 +23,7 @@ public class SoundManager : MonoBehaviour {
 		BgmZako = audioSources [5];
 		SePunch = audioSources [6];
 		SeJump = audioSources [7];
+		//SeBlock = audioSources [8];
 	}
 
 	public void PlayBgmMenuOne() {
@@ -38,6 +40,9 @@ public class SoundManager : MonoBehaviour {
 	public void PlaySeButton() {
 		SeButton.PlayOneShot (SeButton.clip);
 	}
+	public void StopSeButton() {
+		SeButton.Stop ();
+	}
 	public void PlaySeBack() {
 		SeBack.PlayOneShot (SeBack.clip);
 	}
@@ -45,12 +50,12 @@ public class SoundManager : MonoBehaviour {
 		SeGameStart.PlayOneShot (SeGameStart.clip);
 	}
 	public void PlaySePunch() {
-		if (SePunch != null) {
-			//SePunch.PlayOneShot (SePunch.clip);
-			SePunch.Play();
-		}
+		SePunch.PlayOneShot (SePunch.clip);
 	}
 	public void PlaySeJump() {
 		SeJump.PlayOneShot (SeJump.clip);
+	}
+	public void PlaySeBlock() {
+		SeBlock.PlayOneShot (SeBlock.clip);
 	}
 }

@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class VoiceManager : MonoBehaviour {
-
 	private AudioSource Vod0010;
 	private AudioSource Guyo0020;
 	private AudioSource Vod0030;
@@ -99,6 +98,23 @@ public class VoiceManager : MonoBehaviour {
 				Guyo0150.PlayOneShot (Guyo0150.clip);
 			}
 		}
+	}
+	public void StopVoice() {
+		Vod0010.Stop ();
+		Guyo0020.Stop ();
+		Vod0030.Stop ();
+		Guyo0040.Stop ();
+		Guyo0050.Stop ();
+		Vod0060.Stop ();
+		Guyo0070.Stop ();
+		Guyo0080.Stop ();
+		Vod0090.Stop ();
+		Vod0100.Stop ();
+		Guyo0110.Stop ();
+		Vod0120.Stop ();
+		Guyo0130.Stop ();
+		Guyo0140.Stop ();
+		Guyo0150.Stop ();
 	}
 
 }

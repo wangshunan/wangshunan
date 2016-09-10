@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class ResultController : MonoBehaviour {
 
+
 	public void OnRetryButtonClicked() {
 		SceneManager.LoadScene ("Battle");
 	}

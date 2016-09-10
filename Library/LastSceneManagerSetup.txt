@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Clear.unity
+- path: Assets/Scene/Battle.unity
   isLoaded: 1
   isActive: 1

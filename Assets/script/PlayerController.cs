@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour {
 
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour {
 	public float bloodPressure;
     public Slider staminaSlider;
     public Slider booldPressureSlider;
+	public Slider bossHp;
 	GameObject[] enemy;
     GameObject[] block;
     GameObject[] item;
@@ -30,13 +32,26 @@ public class PlayerController : MonoBehaviour {
 	private float distanceCheckY = 0.0f;
     // base layerで使われる、アニメーターの現在の状態の参照
     private AnimatorStateInfo currentBaseState;
-    private float axis = 0.0f;
+    private float axis1 = 0.0f;
     private bool hypertension = false;
     private bool reduceBloodPress = false;
+	public bool game = true;
     private float hypertensionSpeed;
     private float healthSpeed;
 	private float hypertensionJumpPower;
 	private float healthJumpPower;
+	private GameObject gameLogic;
+
+	//swipeActions
+	public float minSwipeDistY;
+
+	public float minSwipeDistX;
+
+	public float tapDis;
+
+	private Vector2 startPos;
+
+	public Text text;
 
     // アニメーター各ステートへの参照
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
@@ -46,8 +61,9 @@ public class PlayerController : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
+	void Start () {		
 		enemy = GameObject.FindGameObjectsWithTag("Enemy");
+		boss = GameObject.Find( "Vodke" );
         spriteRenderer = GetComponent<SpriteRenderer> ();
         animator = GetComponent<Animator>();
         rig2d = GetComponent<Rigidbody2D> ();
@@ -56,16 +72,23 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		axis = Input.GetAxisRaw ( "Horizontal" );
+		//axis = Input.GetAxisRaw ( "Horizontal" );
+		axis1 = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
         currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
         staminaSlider.value += 1 * Time.deltaTime;
         if ( currentBaseState.fullPathHash == passive && rig2d.velocity.y == 0.0f ) {
             animator.SetBool( "Passiveness", false );
         }
 
-        if ( currentBaseState.fullPathHash != passive ) {
+		if ( bossHp.value <= 0 || booldPressureSlider.value == 100 ) {
+			game = false;
+		}
+
+		if ( currentBaseState.fullPathHash != passive && game == true ) {
             Controller( );
+			SwipeAction ();
         }
+
         ItemDecision( );
 
         
@@ -73,14 +96,14 @@ public class PlayerController : MonoBehaviour {
 
     void Controller( ) {
 
-            //　キャラを移動させる
-		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
-            rig2d.transform.position += new Vector3(axis * speed * Time.deltaTime, 0);
+        //　キャラを移動させる
+		if ( axis1 != 0 && currentBaseState.fullPathHash != attack ) {
+            rig2d.transform.position += new Vector3(axis1 * speed * Time.deltaTime, 0);
             animator.SetBool( "Run", true );
         } else {
             animator.SetBool( "Run", false );
         }
-		// 攻撃
+		/*// 攻撃
 		if ( Input.GetKeyDown( KeyCode.Z ) && currentBaseState.fullPathHash != jump && currentBaseState.fullPathHash != attack ) {
             Debug.Log( "!!!!" );
 			if ( staminaSlider.value > 10.0f ) {
@@ -99,7 +122,7 @@ public class PlayerController : MonoBehaviour {
 		if ( rig2d.velocity.y == 0 )
         {
             animator.SetBool( "Jump", false );
-        }
+        }*/
         
         if ( booldPressureSlider.value >= 50.0f && hypertension == false ) {
             hypertension = true;
@@ -114,14 +137,13 @@ public class PlayerController : MonoBehaviour {
 			Initialization ();
         }
 
-		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
-			spriteRenderer.flipX = axis < 0;
+		if ( axis1 != 0 && currentBaseState.fullPathHash != attack ) {
+			spriteRenderer.flipX = axis1 < 0;
         }
     }
 
 	private void AttackDecision() {
 
-        boss = GameObject.Find( "Vodke" );
 		block = GameObject.FindGameObjectsWithTag ( "Block" );
 		enemy = GameObject.FindGameObjectsWithTag ( "Enemy" );
 		for ( int i = 0; i < enemy.Length; i++ ) {        
@@ -135,14 +157,14 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
       
-            /*distanceCheckX = boss.transform.position.x - transform.position.x;
+            distanceCheckX = boss.transform.position.x - transform.position.x;
             distanceCheckY = boss.transform.position.y - transform.position.y;
 			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION ) &&
                  ( ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= HITDIRETION ) ) {
                 if ( spriteRenderer.flipX != boss.GetComponent<SpriteRenderer>().flipX ) {
                     boss.GetComponent<BossController>().Damage( atk );
                 }
-			}*/
+			}
 
 		for ( int i = 0; i < block.Length; i++ ) {
             distanceCheckX = block[ i ].transform.position.x - transform.position.x;
@@ -163,7 +185,6 @@ public class PlayerController : MonoBehaviour {
 
         if( hypertension == true ) {
             speed = hypertensionSpeed;
-
             if ( booldPressureSlider.value >= 70.0f ) {
                 jumpPower = 0;
             } else {
@@ -185,7 +206,7 @@ public class PlayerController : MonoBehaviour {
 					Initialization ();
 				}
 				if ( item [i].gameObject.layer == 13 ) {
-					booldPressureSlider.value += 50;
+					booldPressureSlider.value += 25;
 					staminaSlider.value += 50;
 				}
 				Destroy( item[ i ].gameObject );
@@ -194,8 +215,8 @@ public class PlayerController : MonoBehaviour {
     }
 
 	private void Initialization( ) {
-		hypertensionSpeed = 10.0f;
-		healthSpeed = 3.0f;
+		hypertensionSpeed = 3.0f;
+		healthSpeed = 4.0f;
 		hypertensionJumpPower = 3.5f;
 		healthJumpPower = 7.0f;
 		speed = healthSpeed;
@@ -211,7 +232,95 @@ public class PlayerController : MonoBehaviour {
 	}
 
     public void Passiveness( ) {
+
+		distanceCheckX = boss.transform.position.x - transform.position.x;
         animator.SetBool( "Passiveness", true );
-        rig2d.velocity = new Vector2( -4.0f, 2.0f );
+		rig2d.velocity = new Vector2( distanceCheckX > 0 ? -4.0f : 4.0f, 2.0f );
     }
+
+	void SwipeAction()
+	{
+		if ( rig2d.velocity.y == 0 )
+		{
+			animator.SetBool( "Jump", false );
+		}
+
+		if (Input.touchCount > 0) {
+			for (int i = 0; i < Input.touchCount; i++) {
+				Touch touch = Input.touches [i];
+
+				switch (touch.phase) {
+
+				case TouchPhase.Began:
+
+					startPos = touch.position;
+
+					if (rig2d.velocity.y == 0) {
+						animator.SetBool ("Jump", false);
+					}
+
+					break;
+
+				case TouchPhase.Ended:
+
+					float swipeDistVertical = (new Vector3 (0, touch.position.y, 0) - new Vector3 (0, startPos.y, 0)).magnitude;
+
+					if (swipeDistVertical > minSwipeDistY && (touch.position.x > (Screen.width / 2))) {
+
+						float swipeValue = Mathf.Sign (touch.position.y - startPos.y);
+
+						//jump
+						if (swipeValue > 0) {//up swipe
+							//Jump ();
+							if (currentBaseState.fullPathHash != jump) {
+								rig2d.velocity = new Vector2 (rig2d.velocity.x, jumpPower + 5);
+								animator.SetBool ("Jump", true);
+								//soundManager.PlaySeJump ();
+							}
+							text.text = "Up Swipe";
+						}
+
+						//jumpEnd
+
+						else if (swipeValue < 0) {//down swipe
+							//Shrink ();
+							text.text = "Down Swipe";
+						}
+					}
+
+					float swipeDistHorizontal = (new Vector3 (touch.position.x, 0, 0) - new Vector3 (startPos.x, 0, 0)).magnitude;
+
+					if (swipeDistHorizontal > minSwipeDistX && (touch.position.x > (Screen.width / 2))) {
+
+						float swipeValue = Mathf.Sign (touch.position.x - startPos.x);
+
+						if (swipeValue > 0) {//right swipe
+							//MoveRight ();
+							text.text = "Right Swipe";
+						} else if (swipeValue < 0) {//left swipe
+							//MoveLeft ();
+							text.text = "Left Swipe";
+						}
+					}
+
+					//tap攻撃
+					if (swipeDistVertical <= tapDis && swipeDistHorizontal <= tapDis && (touch.position.x > (Screen.width / 2))) {
+						if (currentBaseState.fullPathHash != jump && currentBaseState.fullPathHash != attack) {
+							Debug.Log ("!!!!");
+							if (staminaSlider.value > 0) {
+								//soundManager.PlaySePunch ();
+								animator.SetTrigger ("Attack");
+								staminaSlider.value -= STAMINACONSUME;
+							}
+						}
+						text.text = "tap";
+					}
+					break;
+
+				}
+			}
+		}
+	}
+		
+		
 }

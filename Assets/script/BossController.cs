@@ -15,6 +15,7 @@ public class BossController : MonoBehaviour {
 
 	public float atk = 1;
     public Slider hpSlider;
+	public Slider playerSlider;
 
     // base layerで使われる、アニメーターの現在の状態の参照
     private AnimatorStateInfo currentBaseState;
@@ -57,15 +58,18 @@ public class BossController : MonoBehaviour {
 		TargetX = target.transform.position.x;
 		EnemyX = transform.position.x;
 		distanceCheck = EnemyX - TargetX;
-        
-        switch( pattern ) {
-            case 0:
-            Usually( );
-                break;
-            case 1:
-                Skill( );
-                break;
-        }
+		if (hpSlider.value == 0 || playerSlider.value >= 100) {
+	      
+		} else {
+			switch (pattern) {
+			case 0:
+				Usually ();
+				break;
+			case 1:
+				Skill ();
+				break;
+			}
+		}
 
 	}
 
