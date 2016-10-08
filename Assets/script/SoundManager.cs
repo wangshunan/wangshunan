@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour {
 		BgmZako = audioSources [5];
 		SePunch = audioSources [6];
 		SeJump = audioSources [7];
-		//SeBlock = audioSources [8];
+		SeBlock = audioSources [8];
 	}
 
 	public void PlayBgmMenuOne() {

@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour {
     Rigidbody2D rig2d;
 	public SoundManager soundManager;
 
+	public bool isGrounded = false;
+	Transform tagGround;
+	public LayerMask playerMask;
+
     private float speed;
     private float jumpPower;
     private int atk = 10;
@@ -41,6 +45,7 @@ public class PlayerController : MonoBehaviour {
 	private float hypertensionJumpPower;
 	private float healthJumpPower;
 	private GameObject gameLogic;
+	private GameObject balloonController;
 
 	//swipeActions
 	public float minSwipeDistY;
@@ -56,12 +61,15 @@ public class PlayerController : MonoBehaviour {
     // アニメーター各ステートへの参照
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
     static int run = Animator.StringToHash ( "Base Layer.Run" );
-    static int jump = Animator.StringToHash( "Base Layer.Jump" );
+    public static int jump = Animator.StringToHash( "Base Layer.Jump" );
     static int passive = Animator.StringToHash( "Base Layer.Passiveness" );
+	static int dead = Animator.StringToHash( "Base Layer.Dead" );
 
 
 	// Use this for initialization
 	void Start () {		
+		tagGround = GameObject.Find (this.name + "/tag_ground").transform;
+
 		enemy = GameObject.FindGameObjectsWithTag("Enemy");
 		boss = GameObject.Find( "Vodke" );
         spriteRenderer = GetComponent<SpriteRenderer> ();
@@ -72,21 +80,29 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//axis = Input.GetAxisRaw ( "Horizontal" );
+		isGrounded = Physics2D.Linecast (rig2d.position, tagGround.position, playerMask);
+
+		//axis1 = Input.GetAxisRaw ( "Horizontal" );
 		axis1 = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
         currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
-        staminaSlider.value += 1 * Time.deltaTime;
+        staminaSlider.value += 2 * Time.deltaTime;
         if ( currentBaseState.fullPathHash == passive && rig2d.velocity.y == 0.0f ) {
             animator.SetBool( "Passiveness", false );
         }
 
 		if ( bossHp.value <= 0 || booldPressureSlider.value == 100 ) {
 			game = false;
+			if ( booldPressureSlider.value == 100 ) {
+				animator.SetTrigger ("Dead");
+			}
 		}
+			
 
 		if ( currentBaseState.fullPathHash != passive && game == true ) {
-            Controller( );
-			SwipeAction ();
+            if( transform.position.y >= -4.0f ) {
+                Controller( );
+			    SwipeAction ();
+            }
         }
 
         ItemDecision( );
@@ -95,52 +111,66 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Controller( ) {
+		//　キャラを移動させる
+		if (axis1 != 0 && currentBaseState.fullPathHash != attack) {
+			rig2d.transform.position += new Vector3 ((axis1 > 0 ? 1 : -1) * speed * Time.deltaTime, 0);
+			animator.SetBool ("Run", true);
+		} else {
+			animator.SetBool ("Run", false);
+		}
 
-        //　キャラを移動させる
-		if ( axis1 != 0 && currentBaseState.fullPathHash != attack ) {
-            rig2d.transform.position += new Vector3(axis1 * speed * Time.deltaTime, 0);
-            animator.SetBool( "Run", true );
-        } else {
-            animator.SetBool( "Run", false );
-        }
-		/*// 攻撃
-		if ( Input.GetKeyDown( KeyCode.Z ) && currentBaseState.fullPathHash != jump && currentBaseState.fullPathHash != attack ) {
-            Debug.Log( "!!!!" );
-			if ( staminaSlider.value > 10.0f ) {
+		// 攻撃
+		if (Input.GetKeyDown (KeyCode.Z) && currentBaseState.fullPathHash != jump && currentBaseState.fullPathHash != attack) {
+			Debug.Log ("!!!!");
+			if (staminaSlider.value > 10.0f) {
 				animator.SetTrigger ("Attack");
 				staminaSlider.value -= STAMINACONSUME;
+				soundManager.PlaySePunch ();
 			}
-        }      
+		}
 
-		//　ジャンプ
-        if ( Input.GetButtonDown( "Jump" ) && currentBaseState.fullPathHash != jump )
-        {
-            rig2d.velocity = new Vector2(rig2d.velocity.x, jumpPower + 5);
-            animator.SetBool( "Jump", true );
-			//soundManager.PlaySeJump ();
-        }
-		if ( rig2d.velocity.y == 0 )
+		if (Input.GetButtonDown ("Jump") && currentBaseState.fullPathHash != jump) {
+			if (isGrounded) {
+				{
+					rig2d.velocity = new Vector2 (rig2d.velocity.x, jumpPower + 5);
+					soundManager.PlaySeJump ();
+				}
+				//soundManager.PlaySeJump ();
+			}
+
+		}
+
+		if (isGrounded == true) {
+			animator.SetBool ("Jump", false);
+		} else {
+			animator.SetBool ("Jump", true);
+		}
+
+			/*
+		 * //　ジャンプ
+		if ( rig2d.velocity.y == 0.0f )
         {
             animator.SetBool( "Jump", false );
-        }*/
-        
-        if ( booldPressureSlider.value >= 50.0f && hypertension == false ) {
-            hypertension = true;
-            BloodPressureSystem();
         }
-        if (booldPressureSlider.value >= 70.0f && hypertension == true )
-        {
-            hypertension = false;
-        }
+        */
 
-        if(  booldPressureSlider.value < 50.0f && reduceBloodPress == false ) {
-			Initialization ();
-        }
+			if (booldPressureSlider.value >= 50.0f && hypertension == false) {
+				hypertension = true;
+				BloodPressureSystem ();
+			}
+			if (booldPressureSlider.value >= 70.0f && hypertension == true) {
+				hypertension = false;
+			}
 
-		if ( axis1 != 0 && currentBaseState.fullPathHash != attack ) {
-			spriteRenderer.flipX = axis1 < 0;
-        }
-    }
+			if (booldPressureSlider.value < 50.0f && reduceBloodPress == false) {
+				Initialization ();
+			}
+
+			if (axis1 != 0 && currentBaseState.fullPathHash != attack) {
+				spriteRenderer.flipX = axis1 < 0;
+			}
+			
+		}
 
 	private void AttackDecision() {
 
@@ -175,6 +205,7 @@ public class PlayerController : MonoBehaviour {
                      ( distanceCheckX < 0 && spriteRenderer.flipX == true ) ) {
 				    block[i].GetComponent<BlockController> ().BlockDestroyAni ();
                     Debug.Log( "" + i );
+					soundManager.PlaySeBlock ();
                 }
 			}
 		}
@@ -200,7 +231,7 @@ public class PlayerController : MonoBehaviour {
             distanceCheckX = item[ i ].transform.position.x - transform.position.x;
 			distanceCheckY = transform.position.y - item[ i ].transform.position.y;
 			if( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION - 0.5f ) &&
-				    distanceCheckY <= 0.9f ) {
+				  ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= 0.9f ) {
 				if ( item [i].gameObject.layer == 12 ) {
 					booldPressureSlider.value -= 50;
 					Initialization ();
@@ -238,13 +269,14 @@ public class PlayerController : MonoBehaviour {
 		rig2d.velocity = new Vector2( distanceCheckX > 0 ? -4.0f : 4.0f, 2.0f );
     }
 
+
+
+
+
+
+
 	void SwipeAction()
 	{
-		if ( rig2d.velocity.y == 0 )
-		{
-			animator.SetBool( "Jump", false );
-		}
-
 		if (Input.touchCount > 0) {
 			for (int i = 0; i < Input.touchCount; i++) {
 				Touch touch = Input.touches [i];
@@ -254,10 +286,6 @@ public class PlayerController : MonoBehaviour {
 				case TouchPhase.Began:
 
 					startPos = touch.position;
-
-					if (rig2d.velocity.y == 0) {
-						animator.SetBool ("Jump", false);
-					}
 
 					break;
 
@@ -274,7 +302,6 @@ public class PlayerController : MonoBehaviour {
 							//Jump ();
 							if (currentBaseState.fullPathHash != jump) {
 								rig2d.velocity = new Vector2 (rig2d.velocity.x, jumpPower + 5);
-								animator.SetBool ("Jump", true);
 								//soundManager.PlaySeJump ();
 							}
 							text.text = "Up Swipe";
@@ -307,7 +334,7 @@ public class PlayerController : MonoBehaviour {
 					if (swipeDistVertical <= tapDis && swipeDistHorizontal <= tapDis && (touch.position.x > (Screen.width / 2))) {
 						if (currentBaseState.fullPathHash != jump && currentBaseState.fullPathHash != attack) {
 							Debug.Log ("!!!!");
-							if (staminaSlider.value > 0) {
+							if (staminaSlider.value > 10 ) {
 								//soundManager.PlaySePunch ();
 								animator.SetTrigger ("Attack");
 								staminaSlider.value -= STAMINACONSUME;
@@ -320,6 +347,11 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	void BallonDestroy() {
+		balloonController = GameObject.Find ("TextController");
+		balloonController.GetComponent<BalloonController> ().BalloonDestroy ();
 	}
 		
 		

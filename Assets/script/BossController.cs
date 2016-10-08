@@ -13,7 +13,7 @@ public class BossController : MonoBehaviour {
         SKILL
     };
 
-	public float atk = 1;
+	private float atk = 2;
     public Slider hpSlider;
 	public Slider playerSlider;
 
@@ -28,20 +28,20 @@ public class BossController : MonoBehaviour {
     private float passivenessCount = 0.0f;
 	float moveSpeed = 1.0f;
 	const float HIT_DISTANCE = 1.5f;
-    const float FIND_DISTANCE = 5.0f;
+    const float FIND_DISTANCE = 6.5f;
     float hitCount = 10.0f;
 	float timeCount = 0.0f;
     private int pattern;
     private bool skill;
     private bool a = false;
     private bool skillSuitchi = false;
-
+	public GameObject Hp;
 
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
     static int attack2 = Animator.StringToHash ( "Base Layer.Rush" );
     static int damage = Animator.StringToHash ( "Base Layer.Damage" );
     static int jump = Animator.StringToHash ( "Base Layer.Jump" );
-    //static int dead = Animator.StringToHash( "Base Layer.Dead" );
+    static int dead = Animator.StringToHash( "Base Layer.Dead" );
 
 
 	void Start() {
@@ -58,6 +58,10 @@ public class BossController : MonoBehaviour {
 		TargetX = target.transform.position.x;
 		EnemyX = transform.position.x;
 		distanceCheck = EnemyX - TargetX;
+
+		if ((distanceCheck > 0 ? distanceCheck : -distanceCheck) <= FIND_DISTANCE) {
+			Hp.SetActive (true);
+		}
 		if (hpSlider.value == 0 || playerSlider.value >= 100) {
 	      
 		} else {
@@ -82,10 +86,13 @@ public class BossController : MonoBehaviour {
         } else {
 	        animator.SetTrigger ( "Damage" );
             passivenessCount += 1;
-            if( passivenessCount >= 3.0f ) {
+			if( passivenessCount >= 3.0f && hpSlider.value > 0 ) {
 		        EnemyRd.velocity = new Vector2 ( distanceCheck > 0 ? 5.0f : -5.0f, 5.0f);
                 passivenessCount = 0.0f;
             }
+			if ( hpSlider.value == 0 ) {
+				animator.SetTrigger ("Dead");
+			}
         }
 	}
 
@@ -114,6 +121,10 @@ public class BossController : MonoBehaviour {
                 animator.SetBool( "Walk", false );
             }
         }
+
+		if (hpSlider.value == 0) {
+			animator.SetTrigger ("Dead");
+		}
 
     }
 
@@ -152,7 +163,7 @@ public class BossController : MonoBehaviour {
         distanceCheck = target.transform.position.x - transform.position.x;
         if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE - 0.2f  ) { 
             target.GetComponent<PlayerController> ().Passiveness ( );
-            target.GetComponent<PlayerController> ().Damage (atk);
+            target.GetComponent<PlayerController> ().Damage (atk + 5);
         }
     }
 }

@@ -15,13 +15,23 @@ public class GameLogic : MonoBehaviour {
 	public GameObject title;
 	public GameObject asd;
 
+	public GameObject bossHp;
+	public GameObject playerHp;
+	public GameObject stamina;
+
 	private GameObject boss;
 	private GameObject enemy;
 	private GameObject clearImage;
 	private GameObject overImage;
 	public GameObject player;
 
-	public enum Game {
+	private GameObject balloonStatus;
+
+	private float count;
+
+	public int gameStatus;
+
+	private enum Game {
 		Start,
 		Clear,
 		Over
@@ -33,22 +43,37 @@ public class GameLogic : MonoBehaviour {
 		clearImage = GameObject.Find ("CLEAR!");
 		overImage = GameObject.Find ("game_over2");
 		game = ( int )Game.Start;
+		balloonStatus = GameObject.Find ("TextController");
 		//asd.SetActive (true);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-		if ( bossHpSlider.value <= 0 ) {
+
+
+		if ( bossHpSlider.value <= 0 || playerHpSlider.value == 100 || player.transform.position.y <= -2.0f ) {
+			count += Time.deltaTime;
+		}
+
+		/*if (bossHpSlider.value <= 0 || (playerHpSlider.value == 100 || player.transform.position.y <= -2.0f)) {
+			balloonStatus.GetComponent<BalloonController> ().BalloonStatus ();
+		}*/
+
+		if ( bossHpSlider.value <= 0 && count >= 1.0f ) {
+			balloonStatus.GetComponent<BalloonController> ().Clear ();
 			GameClear ();
 		}
-		if ( playerHpSlider.value == 100 || player.transform.position.y <= -2.0f ) {
+		if ( ( playerHpSlider.value == 100 || player.transform.position.y <= -2.0f ) && count >= 1.0f ) {
+			balloonStatus.GetComponent<BalloonController> ().Over ();
 			GameOver ();
 		}
 	}
 
-	public void GameClear( ) {
+	void GameClear( ) {
 		asd.SetActive (false);
+		bossHp.SetActive (false);
+		playerHp.SetActive (false);
+		stamina.SetActive (false);
 		if (alpha <= 0.6f) {
 			// フェードアウト
 			alpha += 0.01f;
@@ -56,6 +81,7 @@ public class GameLogic : MonoBehaviour {
 		}
 
 		if ( alpha > 0.6f && clearImage.transform.position.y > 2.0f ) {
+			balloonStatus.GetComponent<BalloonController> ().BalloonDestroy ();
 			clearImage.transform.position -= new Vector3 (0, 0.05f, 0 );
 		}
 
@@ -65,7 +91,7 @@ public class GameLogic : MonoBehaviour {
 		}
 	}
 
-	public void GameOver( ) {
+	void GameOver( ) {
 		asd.SetActive (false);
 		if (alpha <= 0.6f) {
 			alpha += 0.01f;
@@ -73,6 +99,9 @@ public class GameLogic : MonoBehaviour {
 		}
 
 		if ( alpha > 0.6f && overImage.transform.position.y > 2.0f ) {
+			bossHp.SetActive (false);
+			playerHp.SetActive (false);
+			stamina.SetActive (false);
 			overImage.transform.position -= new Vector3 (0, 0.05f, 0 );
 		}
 

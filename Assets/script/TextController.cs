@@ -93,7 +93,7 @@ public class TextController : MonoBehaviour {
 
 	}
 	public void LoadSceneBattle() {
-		Application.LoadLevel("Battle");
+		Application.LoadLevel("tutorial");
 	}
 
 	public void OnStartButtonClicked(){
