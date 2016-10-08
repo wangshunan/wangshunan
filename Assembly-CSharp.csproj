@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{2FD5DA57-6192-1896-C78B-713CB9169A59}</ProjectGuid>
+    <ProjectGuid>{1CF91E07-F164-FD5E-E014-35D5E3FB02BE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -58,29 +58,26 @@
      <Compile Include="Assets\MoveController\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
      <Compile Include="Assets\MoveController\Standard Assets\CrossPlatformInput\Scripts\TouchPad.cs" />
      <Compile Include="Assets\MoveController\Standard Assets\CrossPlatformInput\Scripts\VirtualInput.cs" />
-     <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\BattleSpriteAction.cs" />
-     <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\EmoteSpriteAction.cs" />
-     <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\SpriteAction.cs" />
-     <Compile Include="Assets\script\BalloonController.cs" />
-     <Compile Include="Assets\script\BattleUiController.cs" />
-     <Compile Include="Assets\script\BlockController.cs" />
-     <Compile Include="Assets\script\BossController.cs" />
-     <Compile Include="Assets\script\CameraController.cs" />
-     <Compile Include="Assets\script\EnemyController.cs" />
+     <Compile Include="Assets\script\Camera\CameraController.cs" />
+     <Compile Include="Assets\script\Characters\BossController.cs" />
+     <Compile Include="Assets\script\Characters\EnemyController.cs" />
+     <Compile Include="Assets\script\Characters\PlayerController.cs" />
+     <Compile Include="Assets\script\Characters\ZakoController.cs" />
      <Compile Include="Assets\script\GameLogic.cs" />
      <Compile Include="Assets\script\GameLogic2.cs" />
-     <Compile Include="Assets\script\ItemController.cs" />
-     <Compile Include="Assets\script\PlayerController.cs" />
-     <Compile Include="Assets\script\ResultController.cs" />
-     <Compile Include="Assets\script\SceneLoad.cs" />
-     <Compile Include="Assets\script\SoundManager.cs" />
-     <Compile Include="Assets\script\TalkingBtn.cs" />
+     <Compile Include="Assets\script\Items\BlockController.cs" />
+     <Compile Include="Assets\script\Items\ItemController.cs" />
+     <Compile Include="Assets\script\Items\TutorialController.cs" />
+     <Compile Include="Assets\script\Sounds\SoundManager.cs" />
+     <Compile Include="Assets\script\Sounds\VoiceManager.cs" />
      <Compile Include="Assets\script\TextController.cs" />
-     <Compile Include="Assets\script\TitleController.cs" />
-     <Compile Include="Assets\script\TutorialController.cs" />
-     <Compile Include="Assets\script\VoiceManager.cs" />
-     <Compile Include="Assets\script\ZakoController.cs" />
-     <Compile Include="Assets\script\sp.cs" />
+     <Compile Include="Assets\script\UI\BalloonController.cs" />
+     <Compile Include="Assets\script\UI\BattleUiController.cs" />
+     <Compile Include="Assets\script\UI\ResultController.cs" />
+     <Compile Include="Assets\script\UI\SceneLoad.cs" />
+     <Compile Include="Assets\script\UI\TalkingBtn.cs" />
+     <Compile Include="Assets\script\UI\TitleController.cs" />
+     <Compile Include="Assets\script\UI\sp.cs" />
      <None Include="Assets\MoveController\Standard Assets\Fonts\OpenSans\License!.txt" />
      <None Include="Assets\MoveController\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
  <Reference Include="UnityEngine.Networking">
