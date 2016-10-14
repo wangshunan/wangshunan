@@ -10,11 +10,12 @@ public class BossController : MonoBehaviour {
         
 	enum PATTERN{
         USUALLY,
-        SKILL
+        SKILL,
+		DEAD,
+		CLEAR
     };
 
 	private float atk = 2;
-    public Slider hpSlider;
 	public Slider playerSlider;
 
     // base layerで使われる、アニメーターの現在の状態の参照
@@ -26,22 +27,22 @@ public class BossController : MonoBehaviour {
 	float EnemyX;
 	private float distanceCheck;
     private float passivenessCount = 0.0f;
+	private float BossHp;
 	float moveSpeed = 1.0f;
 	const float HIT_DISTANCE = 1.5f;
     const float FIND_DISTANCE = 6.5f;
-    float hitCount = 10.0f;
-	float timeCount = 0.0f;
+	const float HP_MAX = 100;
+	const float HP_HALF = 50;
     private int pattern;
     private bool skill;
     private bool a = false;
     private bool skillSuitchi = false;
-	public GameObject Hp;
+	public GameObject HpSlider;
 
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
     static int attack2 = Animator.StringToHash ( "Base Layer.Rush" );
     static int damage = Animator.StringToHash ( "Base Layer.Damage" );
     static int jump = Animator.StringToHash ( "Base Layer.Jump" );
-    static int dead = Animator.StringToHash( "Base Layer.Dead" );
 
 
 	void Start() {
@@ -54,51 +55,57 @@ public class BossController : MonoBehaviour {
 
 	void Update() {
 
-        currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
-		TargetX = target.transform.position.x;
-		EnemyX = transform.position.x;
-		distanceCheck = EnemyX - TargetX;
-
-		if ((distanceCheck > 0 ? distanceCheck : -distanceCheck) <= FIND_DISTANCE) {
-			Hp.SetActive (true);
-		}
-		if (hpSlider.value == 0 || playerSlider.value >= 100) {
-	      
-		} else {
-			switch (pattern) {
+		switch ( pattern ) {
 			case 0:
 				Usually ();
 				break;
 			case 1:
 				Skill ();
 				break;
-			}
+			case 3:
+				Dead ();
+				break;
 		}
 
 	}
 
 	public void Damage( float damage ) {
+		
+		// UI表示
+		if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck) <= FIND_DISTANCE ) {
+			HpSlider.SetActive (true);
+		}
 
-        hpSlider.value -= damage;
-        if ( hpSlider.value <= 50.0f && skillSuitchi == false ) {  
+		HpSlider.GetComponent<Slider>().value -= damage;
+		if ( HpSlider.GetComponent<Slider>().value <= HP_HALF && skillSuitchi == false ) {  
             pattern = ( int )PATTERN.SKILL;
             skillSuitchi = true;
         } else {
 	        animator.SetTrigger ( "Damage" );
             passivenessCount += 1;
-			if( passivenessCount >= 3.0f && hpSlider.value > 0 ) {
+			if ( passivenessCount >= 3.0f && HpSlider.GetComponent<Slider>().value > 0 ) {
 		        EnemyRd.velocity = new Vector2 ( distanceCheck > 0 ? 5.0f : -5.0f, 5.0f);
                 passivenessCount = 0.0f;
             }
-			if ( hpSlider.value == 0 ) {
-				animator.SetTrigger ("Dead");
+			if ( HpSlider.GetComponent<Slider>().value == 0 ) {
+				pattern = ( int )PATTERN.DEAD; 
 			}
         }
 	}
 
+	void Dead() {		
+		animator.SetTrigger ("DEAD");
+		pattern = ( int )PATTERN.CLEAR;
+	}
+
     void Usually( ) {
 
-        if (  currentBaseState.fullPathHash != damage && currentBaseState.fullPathHash != attack ) {
+		currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
+		TargetX = target.transform.position.x;
+		EnemyX = transform.position.x;
+		distanceCheck = EnemyX - TargetX;
+
+        if ( currentBaseState.fullPathHash != damage && currentBaseState.fullPathHash != attack ) {
 
             if ( distanceCheck > 0.0f ) {
                 spriteRenderer.flipX = true ;
@@ -122,7 +129,7 @@ public class BossController : MonoBehaviour {
             }
         }
 
-		if (hpSlider.value == 0) {
+		if ( HpSlider.GetComponent<Slider>().value == 0 ) {
 			animator.SetTrigger ("Dead");
 		}
 
@@ -150,6 +157,7 @@ public class BossController : MonoBehaviour {
         }
 
     }
+
 	void AttackDecision( ) {
         distanceCheck = target.transform.position.x - transform.position.x;
         if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE && 
