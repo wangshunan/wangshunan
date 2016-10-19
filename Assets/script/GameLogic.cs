@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour {
 
-	[SerializeField] PlayerController playerController;
+	/*[SerializeField] PlayerController playerController;
 	[SerializeField] BossController bossController;
 	[SerializeField] EnemyController enemyComtroller;
-	[SerializeField] ResultsController resultsController;
+	[SerializeField] ResultsController resultsController;*/
 
 	private enum GAME_STATUS {
 		Start,

@@ -78,7 +78,7 @@ public class BalloonController : MonoBehaviour {
 			if (playerBooldPressureSlider.value < 50) {
 				boold = true;
 			}
-			if (player.transform.position.y <= -1.15297f) {
+			if ( player.transform.position.y <= -1.15297f ) {
 				if (playerBooldPressureSlider.value >= 50 && boold == true) {
 					currentText = scenarios [7];
 					count = 0.0f;

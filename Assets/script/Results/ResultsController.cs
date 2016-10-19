@@ -17,7 +17,8 @@ public class ResultsController : MonoBehaviour {
 	public GameObject gameOver;
 	public GameObject retry;
 	public GameObject title;
-	public GameObject asd;
+	public GameObject moveControllerPanel;
+    private GameObject balloonStatus;
 
 	public GameObject bossHp;
 	public GameObject playerHp;
@@ -29,7 +30,6 @@ public class ResultsController : MonoBehaviour {
 	private GameObject overImage;
 	public GameObject player;
 
-	private GameObject balloonStatus;
 
 	private float count;
 
@@ -39,7 +39,7 @@ public class ResultsController : MonoBehaviour {
 		gameOver = GameObject.Find ("GameOver");
 		clearImage = GameObject.Find ("CLEAR!");
 		overImage = GameObject.Find ("game_over2");
-		balloonStatus = GameObject.Find ("TextController");
+        balloonStatus = GameObject.Find ("TextController");
 	}
 	
 	// Update is called once per frame
@@ -53,13 +53,13 @@ public class ResultsController : MonoBehaviour {
 			GameClear ();
 		}
 		if ( ( playerHpSlider.value == 100 || player.transform.position.y <= -2.0f ) && count >= 1.0f ) {
-			balloonStatus.GetComponent<BalloonController> ().Over ();
+			//balloonStatus.GetComponent<BalloonController> ().Over ();
 			GameOver ();
 		}
 	}
 
 	void GameClear( ) {
-		asd.SetActive (false);
+		moveControllerPanel.SetActive (false);
 		bossHp.SetActive (false);
 		playerHp.SetActive (false);
 		stamina.SetActive (false);
@@ -81,7 +81,7 @@ public class ResultsController : MonoBehaviour {
 	}
 
 	void GameOver( ) {
-		asd.SetActive (false);
+		moveControllerPanel.SetActive (false);
 		if (alpha <= 0.6f) {
 			alpha += 0.01f;
 			gameOver.GetComponent<SpriteRenderer> ().color = new Color ( 0, 0, 0, alpha);
