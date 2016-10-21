@@ -4,8 +4,7 @@ using UnityEngine.UI;
 
 public class BalloonController : MonoBehaviour {
 
-    float count;
-	float overCount;
+    private float count;
     bool countOpen;
     private GameObject balloon;
     private GameObject balloonText;
@@ -34,22 +33,25 @@ public class BalloonController : MonoBehaviour {
 	static int jump = Animator.StringToHash("Base Layer.Jump");
 	static int dead = Animator.StringToHash("Base Layer.Dead");
 
-	// Use this for initialization
-	void Start () {
+	void Awake() {
 		gameStatus = 0;
 		balloonOpen = true;
 		gameOpen = true;
-	    balloon = GameObject.Find( "Balloon" );
-        balloonText = GameObject.Find( "BalloonText" );
-        position = balloon.transform.position;
-        rand = Random.Range( 0 , 7 );
-        currentText = scenarios [rand];
+		balloon = GameObject.Find( "Balloon" );
+		balloonText = GameObject.Find( "BalloonText" );
+		position = balloon.transform.position;
+		rand = Random.Range( 0 , 7 );
+		currentText = scenarios [rand];
 		player = GameObject.Find ("Cguy");
+	}
+
+	// Use this for initialization
+	void Start () {
+		currentBaseState = player.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		currentBaseState = player.GetComponent<Animator> ().GetCurrentAnimatorStateInfo (0);
 		if ( gameOpen == false ) {
 			if ( balloonOpen == true ) {
 				if (balloonOpen == true && playerBooldPressureSlider.value == 100 ) {
@@ -73,7 +75,8 @@ public class BalloonController : MonoBehaviour {
 
 		count += Time.deltaTime;
 		if (( count >= 3.0f && count < 6.0f ) || currentBaseState.fullPathHash == jump ) {
-			balloon.transform.position = new Vector3 (0, -100);
+			//balloon.transform.position = new Vector3 (0, -100);
+			balloon.SetActive( false );
 		} else {				
 			if (playerBooldPressureSlider.value < 50) {
 				boold = true;
@@ -82,17 +85,20 @@ public class BalloonController : MonoBehaviour {
 				if (playerBooldPressureSlider.value >= 50 && boold == true) {
 					currentText = scenarios [7];
 					count = 0.0f;
-					balloon.transform.position = position;
+					//balloon.transform.position = position;
+					balloon.SetActive( true );
 					boold = false;
 				} else if (count >= 6.0f) {
 					count = 0.0f;
 					rand = Random.Range (0, 7);
 					currentText = scenarios [rand];
-					balloon.transform.position = position;
+					//balloon.transform.position = position;
+					balloon.SetActive( true );
 				}
 				if (playerBooldPressureSlider.value == 100) {
 					currentText = scenarios [8];
-					balloon.transform.position = position;
+					//balloon.transform.position = position;
+					balloon.SetActive( true );
 				}
 			}
 			uiText.text = currentText.Substring (0, currentText.Length);
@@ -100,7 +106,8 @@ public class BalloonController : MonoBehaviour {
 	}
 
 	public void BalloonDestroy(){
-		balloon.transform.position = new Vector3 (0, -100);
+		//balloon.transform.position = new Vector3 (0, -100);
+		balloon.SetActive( false );
 		balloonOpen = false;
 	}
 		
