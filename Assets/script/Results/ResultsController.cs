@@ -9,12 +9,12 @@ public class ResultsController : MonoBehaviour {
 	const float HALF_HP = 50;
 	const float MIN_HP = 0;
 
+	[SerializeField] GameLogic gameLogic;
+
 	float alpha = 0.0f;
 	private int Color;
-	public Slider bossHpSlider;
-	public Slider playerHpSlider;
-	public GameObject clear;
-	public GameObject gameOver;
+	private GameObject clear;
+	private GameObject gameOver;
 	public GameObject retry;
 	public GameObject title;
 	public GameObject moveControllerPanel;
@@ -30,35 +30,25 @@ public class ResultsController : MonoBehaviour {
 	private GameObject overImage;
 	public GameObject player;
 
-
 	private float count;
 
-	// Use this for initialization
-	void Start () {
+	void Awake( ) {
 		clear = GameObject.Find ("GameClear");
 		gameOver = GameObject.Find ("GameOver");
 		clearImage = GameObject.Find ("CLEAR!");
 		overImage = GameObject.Find ("game_over2");
-        balloonStatus = GameObject.Find ("TextController");
+		balloonStatus = GameObject.Find ("TextController");
 	}
-	
+
+	// Use this for initialization
+	void Start () {
+	}
+
 	// Update is called once per frame
 	void Update () {
-		if ( bossHpSlider.value <= 0 || playerHpSlider.value == 100 || player.transform.position.y <= -2.0f ) {
-			count += Time.deltaTime;
-		}
-
-		if ( bossHpSlider.value <= 0 && count >= 1.0f ) {
-			balloonStatus.GetComponent<BalloonController> ().Clear ();
-			GameClear ();
-		}
-		if ( ( playerHpSlider.value == 100 || player.transform.position.y <= -2.0f ) && count >= 1.0f ) {
-			//balloonStatus.GetComponent<BalloonController> ().Over ();
-			GameOver ();
-		}
 	}
 
-	void GameClear( ) {
+	public void GameClear( ) {
 		moveControllerPanel.SetActive (false);
 		bossHp.SetActive (false);
 		playerHp.SetActive (false);
@@ -80,7 +70,7 @@ public class ResultsController : MonoBehaviour {
 		}
 	}
 
-	void GameOver( ) {
+	public void GameOver( ) {
 		moveControllerPanel.SetActive (false);
 		if (alpha <= 0.6f) {
 			alpha += 0.01f;

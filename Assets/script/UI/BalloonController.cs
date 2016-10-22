@@ -106,7 +106,7 @@ public class BalloonController : MonoBehaviour {
 	}
 
 	public void BalloonDestroy(){
-		//balloon.transform.position = new Vector3 (0, -100);
+		balloon.transform.position = new Vector3 (0, -100);
 		balloon.SetActive( false );
 		balloonOpen = false;
 	}

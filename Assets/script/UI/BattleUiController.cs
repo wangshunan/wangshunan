@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BattleUiController : MonoBehaviour {
+public class UiController : MonoBehaviour {
 	public GameObject BattlePanel;
 	public GameObject PauseMenuPanel;
 	public GameObject RestartSurePanel;

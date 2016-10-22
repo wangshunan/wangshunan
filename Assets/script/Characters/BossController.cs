@@ -38,31 +38,41 @@ public class BossController : MonoBehaviour {
     private bool a = false;
     private bool skillSuitchi = false;
 	public GameObject HpSlider;
+	public bool isDead;
 
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
     static int attack2 = Animator.StringToHash ( "Base Layer.Rush" );
     static int damage = Animator.StringToHash ( "Base Layer.Damage" );
     static int jump = Animator.StringToHash ( "Base Layer.Jump" );
 
-
-	void Start() {
+	void Awake() {
 		animator = GetComponent<Animator> ();
 		target = GameObject.Find ("Cguy");
 		EnemyRd = GetComponent<Rigidbody2D> ();
 		spriteRenderer = GetComponent<SpriteRenderer> ();
-        pattern = (int) PATTERN.USUALLY;
+		pattern = (int)PATTERN.USUALLY;
+		isDead = false;
+	}
+		
+
+	void Start() {
+		/*if (HpSlider.GetComponent<Slider>().value <= 0) {
+			pattern = (int)PATTERN.DEAD;
+		}*/
 	}
 
 	void Update() {
+		
+		statusUpDate ();
 
 		switch ( pattern ) {
-			case 0:
+		case (int)PATTERN.USUALLY:
 				Usually ();
 				break;
-			case 1:
+		case (int)PATTERN.SKILL:
 				Skill ();
 				break;
-			case 3:
+		case (int)PATTERN.DEAD:
 				Dead ();
 				break;
 		}
@@ -87,14 +97,12 @@ public class BossController : MonoBehaviour {
 		        EnemyRd.velocity = new Vector2 ( distanceCheck > 0 ? 5.0f : -5.0f, 5.0f);
                 passivenessCount = 0.0f;
             }
-			if ( HpSlider.GetComponent<Slider>().value == 0 ) {
-				pattern = ( int )PATTERN.DEAD; 
-			}
         }
 	}
 
 	void Dead() {		
 		animator.SetTrigger ("DEAD");
+		isDead = true;
 		pattern = ( int )PATTERN.CLEAR;
 	}
 
@@ -128,12 +136,16 @@ public class BossController : MonoBehaviour {
                 animator.SetBool( "Walk", false );
             }
         }
-
-		if ( HpSlider.GetComponent<Slider>().value == 0 ) {
-			animator.SetTrigger ("Dead");
-		}
+			
 
     }
+
+	void statusUpDate() {
+		if (HpSlider.GetComponent<Slider> ().value == 0) {
+			animator.SetTrigger ("Dead");
+			pattern = (int)PATTERN.DEAD;
+		}
+	}
 
     void Skill( ) {
 

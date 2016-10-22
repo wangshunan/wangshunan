@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour {
     public Slider staminaSlider;
     public Slider booldPressureSlider;
 	public Slider bossHp;
+	public bool isDead = false;
 
     private const float HITDIRETION = 1.1f;
     private const float STAMINA_CONSUME = 10.0f;
@@ -43,7 +44,6 @@ public class PlayerController : MonoBehaviour {
     private float axis;
     private bool hypertension = false;
     private bool reduceBloodPress = false;
-    private bool isDead = false;
     private float hypertensionSpeed;
     private float healthSpeed;
 	private float hypertensionJumpPower;
@@ -58,32 +58,30 @@ public class PlayerController : MonoBehaviour {
 	public Text text;
 
     // アニメーター各ステートへの参照
-    static int iDel = Animator.StringToHash( "Base Layer.Idle" );
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
-    static int run = Animator.StringToHash ( "Base Layer.Run" );
     static int jump = Animator.StringToHash( "Base Layer.Jump" );
     static int passive = Animator.StringToHash( "Base Layer.Passiveness" );
-	static int dead = Animator.StringToHash( "Base Layer.Dead" );
 
+	void Awake () {
+		tagGround = GameObject.Find (this.name + "/tag_ground").transform;
+		enemy = GameObject.FindGameObjectsWithTag ("Enemy");
+		boss = GameObject.Find ("Vodke");
+		spriteRenderer = GetComponent<SpriteRenderer> ();
+		animator = GetComponent<Animator> ();
+		rig2d = GetComponent<Rigidbody2D> ();
+		StatasInit ();
+	}
+		
 
 	// Use this for initialization
 	void Start () {		
-		tagGround = GameObject.Find (this.name + "/tag_ground").transform;
-		enemy = GameObject.FindGameObjectsWithTag("Enemy");
-		boss = GameObject.Find( "Vodke" );
-        spriteRenderer = GetComponent<SpriteRenderer> ();
-        animator = GetComponent<Animator>();
-        rig2d = GetComponent<Rigidbody2D> ();
-		StatasInit();
 	}
 	
 	void Update () {
-
-            SwipeAction ();
-            Controller( );
-            PlayerStatasUpDate( );
-            ItemDecision( );
-       
+            SwipeAction();
+            Controller();
+            PlayerStatasUpDate();
+            ItemDecision();
     }
 
     // プレイヤーコントローラ
@@ -175,8 +173,6 @@ public class PlayerController : MonoBehaviour {
         if ( gameObject.transform.position.y <= -4 ) {
            isDead = true;
         }
-
-
     }
 
     // 攻撃判定
@@ -358,7 +354,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
     void BallonDestroy() {
-		//balloonController.GetComponent<BalloonController> ().BalloonDestroy ();
+		balloonController = GameObject.Find ("TextController");
+		balloonController.GetComponent<BalloonController> ().BalloonDestroy ();
 	}
 		
 }

@@ -68,12 +68,15 @@
      <Compile Include="Assets\script\Items\BlockController.cs" />
      <Compile Include="Assets\script\Items\ItemController.cs" />
      <Compile Include="Assets\script\Items\TutorialController.cs" />
+     <Compile Include="Assets\script\Results\BattleUiController.cs" />
+     <Compile Include="Assets\script\Results\BattleUiManager.cs" />
+     <Compile Include="Assets\script\Results\ResultsController.cs" />
+     <Compile Include="Assets\script\Results\ResultsManager.cs" />
      <Compile Include="Assets\script\Sounds\SoundManager.cs" />
      <Compile Include="Assets\script\Sounds\VoiceManager.cs" />
      <Compile Include="Assets\script\TextController.cs" />
      <Compile Include="Assets\script\UI\BalloonController.cs" />
      <Compile Include="Assets\script\UI\BattleUiController.cs" />
-     <Compile Include="Assets\script\UI\ResultController.cs" />
      <Compile Include="Assets\script\UI\SceneLoad.cs" />
      <Compile Include="Assets\script\UI\TalkingBtn.cs" />
      <Compile Include="Assets\script\UI\TitleController.cs" />

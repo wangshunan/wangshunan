@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour {
 
-	/*[SerializeField] PlayerController playerController;
+	[SerializeField] PlayerController playerController;
 	[SerializeField] BossController bossController;
 	[SerializeField] EnemyController enemyComtroller;
-	[SerializeField] ResultsController resultsController;*/
+	[SerializeField] ResultsController resultsController;
 
-	private enum GAME_STATUS {
+	public enum GAME_STATUS {
 		Start,
 		Clear,
 		Over
@@ -19,9 +19,7 @@ public class GameLogic : MonoBehaviour {
 	const int MAX_HP = 100;
 	const int MIN_HP = 0;
 
-	public Slider bossHp;
-	public Slider playerHp;
-	int gameStatus;
+	public int gameStatus;
 
 	void Awave() {
 		gameStatus = (int)GAME_STATUS.Start;
@@ -37,11 +35,11 @@ public class GameLogic : MonoBehaviour {
 
 	void GameStatusUpData( ) {
 		
-		if (bossHp.value <= MIN_HP) {
+		if ( bossController.isDead ) {
 			gameStatus = (int)GAME_STATUS.Clear;
 		}
 
-		if (playerHp.value >= MAX_HP) {
+		if ( playerController.isDead ) {
 			gameStatus = (int)GAME_STATUS.Over;
 		}
 
