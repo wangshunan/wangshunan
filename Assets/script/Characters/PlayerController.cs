@@ -92,10 +92,10 @@ public class PlayerController : MonoBehaviour {
         }
 
         // keyBoardController
-        axis = Input.GetAxisRaw ( "Horizontal" );
+        //axis = Input.GetAxisRaw ( "Horizontal" );
 
         // TouchController
-		//axis = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
+		axis = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
 
         if ( currentBaseState.fullPathHash != passive ) {
 
