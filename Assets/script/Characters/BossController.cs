@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class BossController : MonoBehaviour {
 
+	[SerializeField] GameLogic gamelogic;
+	[SerializeField] PlayerController playerController;
+
 	Rigidbody2D EnemyRd;
     Animator animator;
         
@@ -64,27 +67,24 @@ public class BossController : MonoBehaviour {
 	void Update() {
 		
 		statusUpDate ();
-
-		switch ( pattern ) {
-		case (int)PATTERN.USUALLY:
-				Usually ();
-				break;
-		case (int)PATTERN.SKILL:
-				Skill ();
-				break;
-		case (int)PATTERN.DEAD:
-				Dead ();
-				break;
+		if(  gamelogic.gameStatus == (int)GameLogic.GAME_STATUS.Start ) {
+			switch ( pattern ) {
+			case (int)PATTERN.USUALLY:
+					Usually ();
+					break;
+			case (int)PATTERN.SKILL:
+					Skill ();
+					break;
+			case (int)PATTERN.DEAD:
+					Dead ();
+					break;
+			}
 		}
 
 	}
 
 	public void Damage( float damage ) {
 		
-		// UI表示
-		if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck) <= FIND_DISTANCE ) {
-			HpSlider.SetActive (true);
-		}
 
 		HpSlider.GetComponent<Slider>().value -= damage;
 		if ( HpSlider.GetComponent<Slider>().value <= HP_HALF && skillSuitchi == false ) {  
@@ -112,6 +112,11 @@ public class BossController : MonoBehaviour {
 		TargetX = target.transform.position.x;
 		EnemyX = transform.position.x;
 		distanceCheck = EnemyX - TargetX;
+
+		// UI表示
+		if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck) <= FIND_DISTANCE ) {
+			HpSlider.SetActive (true);
+		}
 
         if ( currentBaseState.fullPathHash != damage && currentBaseState.fullPathHash != attack ) {
 
@@ -141,6 +146,7 @@ public class BossController : MonoBehaviour {
     }
 
 	void statusUpDate() {
+		
 		if (HpSlider.GetComponent<Slider> ().value == 0) {
 			animator.SetTrigger ("Dead");
 			pattern = (int)PATTERN.DEAD;
@@ -166,6 +172,7 @@ public class BossController : MonoBehaviour {
         if ( EnemyRd.velocity.x == 0.0f && EnemyRd.velocity.y == 0.0f ) {
             animator.SetBool( "Rush", false );
             pattern = (int)PATTERN.USUALLY;
+			playerController.Test ();
         }
 
     }

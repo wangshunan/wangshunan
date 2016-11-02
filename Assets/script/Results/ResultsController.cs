@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class ResultsController : MonoBehaviour {
 
+	[SerializeField] BalloonController balloonController;
+
 	const float MAX_HP = 100;
 	const float HALF_HP = 50;
 	const float MIN_HP = 0;
@@ -65,6 +67,7 @@ public class ResultsController : MonoBehaviour {
 		}
 
 		if (clearImage.transform.position.y <= 2.0f) {
+			balloonController.BalloonDestroy ();
 			retry.SetActive (true);
 			title.SetActive (true);
 		}
@@ -85,6 +88,7 @@ public class ResultsController : MonoBehaviour {
 		}
 
 		if (overImage.transform.position.y <= 2.0f) {
+			balloonController.BalloonDestroy ();
 			retry.SetActive (true);
 			title.SetActive (true);
 		}

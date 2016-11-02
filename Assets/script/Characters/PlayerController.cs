@@ -5,6 +5,8 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour {
 
+	[SerializeField] BossController bossController;
+
     Animator animator;
     Rigidbody2D rig2d;
 
@@ -148,7 +150,6 @@ public class PlayerController : MonoBehaviour {
             animator.SetBool( "Jump", true );
         }
 
-
 		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
 			spriteRenderer.flipX = axis < 0;
 		}
@@ -272,10 +273,13 @@ public class PlayerController : MonoBehaviour {
 
     // ダメージアニメション
     public void Passiveness( ) {
-
+		if (isDead) {
+			return;
+		}
 		distanceCheckX = boss.transform.position.x - transform.position.x;
         animator.SetBool( "Passiveness", true );
 		rig2d.velocity = new Vector2( distanceCheckX > 0 ? -4.0f : 4.0f, 2.0f );
+
     }
 
     // タッチ操作
@@ -305,7 +309,7 @@ public class PlayerController : MonoBehaviour {
 						if (swipeValue > 0) {//up swipe
 							//Jump ();
 							if (currentBaseState.fullPathHash != jump) {
-								rig2d.velocity = new Vector2 (rig2d.velocity.x, jumpPower + 5);
+								rig2d.velocity = new Vector2 (rig2d.velocity.x, jumpPower);
 								//soundManager.PlaySeJump ();
 							}
 							text.text = "Up Swipe";
@@ -353,9 +357,8 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-    void BallonDestroy() {
-		balloonController = GameObject.Find ("TextController");
-		balloonController.GetComponent<BalloonController> ().BalloonDestroy ();
+	public void Test() {
+		animator.SetBool ("Passiveness", false);
 	}
 		
 }
