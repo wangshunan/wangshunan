@@ -20,7 +20,7 @@ public class TitleController : MonoBehaviour {
 	public GameObject Chicken;
 
 
-	public SoundManager soundManager;
+
     //メーニュー切り替え処理
 
 
@@ -28,48 +28,48 @@ public class TitleController : MonoBehaviour {
     public void OnNewGameButtonClicked() {
         MenuPanel.SetActive( false );
         LevelSelectPanel.SetActive( true );
-		soundManager.PlaySeButton();
+
     }
 
     //レベル選択ボタン
     public void OnLevelSelectButtonCliked() {
         LevelSelectPanel.SetActive( false );
         StageSelectPanel.SetActive( true );
-		soundManager.PlaySeButton();
+
     }
 
     //オプションメーニュー選択ボタン
     public void OnOptionButtonClicked() {
         MenuPanel.SetActive( false );
         OptionPanel.SetActive( true );
-		soundManager.PlaySeButton();
+
     }
 
     //言語選択メーニューボタン
     public void OnLaunchButtonClicked() {
         OptionPanel.SetActive( false );
         LaunchPanel.SetActive( true );
-		soundManager.PlaySeButton();
+
     }
 
     //文字サイズメーニュー選択ボタン
     public void OnCharateButtonCliked() {
         OptionPanel.SetActive( false );
         CharatePanel.SetActive( true );
-		soundManager.PlaySeButton();
+
     }
 
     //音量選択メーニューボタン
     public void OnVolumeButtonCliked() {
         OptionPanel.SetActive( false );
         VolumePanel.SetActive( true );
-		soundManager.PlaySeButton();
+
     }
 	//レコードボタン
 	public void OnRecordButtonCliked() {
 		MenuPanel.SetActive( false );
 		RecordPanel.SetActive( true );
-		soundManager.PlaySeButton();
+
 	}
     //一個前メーニューに戻るボタン
     public void OnOptionBackButton() {
@@ -84,18 +84,18 @@ public class TitleController : MonoBehaviour {
         }
         OptionPanel.SetActive( true );
 
-		soundManager.PlaySeBack ();
+
     }    
 
     public void OnStageSelectBackButtonCliked() {
         StageSelectPanel.SetActive( false );
         LevelSelectPanel.SetActive( true );
-		soundManager.PlaySeBack ();
+
     }
     public void OnStartButtonCliked() {
 		StageSelectPanel.SetActive( false );
 		StageIntrodudePanel.SetActive( true );
-		soundManager.PlaySeButton ();
+
     }
 
 	/*public void TalkingScenePanelTouch() {
@@ -106,26 +106,26 @@ public class TitleController : MonoBehaviour {
 		Application.LoadLevel ("Battle");
 	}*/
 	public void OnStageIntroduceGoButtonCliked() {
-		soundManager.PlaySeGameStart ();
+		
 		Invoke ("LoadSceneTalking", 1);
 	}
 	public void LoadSceneTalking() {
 		Application.LoadLevel ("Talking");
 	}
 	public void OnRecordSyagaButtonCliked() {
-		soundManager.PlaySeButton();
+		
 		RecordPanel.SetActive( false );
 		CharacterIntrodudePanel.SetActive( true );
 	}
 	public void OnCharacterIntroduceBackButtonCliked() {
 		CharacterIntrodudePanel.SetActive (false);
 		RecordPanel.SetActive (true);
-		soundManager.PlaySeBack ();
+
 	}
 	public void OnNotYetButtonClicked(){
 		StageIntrodudePanel.SetActive (false);
 		StageSelectPanel.SetActive (true);
-		soundManager.PlaySeBack ();
+
 	}
 
     //メインメーニューに戻るボタン
@@ -134,7 +134,7 @@ public class TitleController : MonoBehaviour {
         OptionPanel.SetActive( false );
 		RecordPanel.SetActive( false );
         MenuPanel.SetActive( true );
-		soundManager.PlaySeBack ();
+
     }
 
     public void ExitButtonCliked()
@@ -150,7 +150,7 @@ public class TitleController : MonoBehaviour {
 		//Stop playing the scene
 		UnityEditor.EditorApplication.isPlaying = false;
 	#endif
-		soundManager.PlaySeBack ();
+
 	}
 
 	public void OnStageIntroduceButtonCliked() {

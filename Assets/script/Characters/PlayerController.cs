@@ -5,8 +5,6 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour {
 
-	[SerializeField] BossController bossController;
-
     Animator animator;
     Rigidbody2D rig2d;
 
@@ -16,7 +14,6 @@ public class PlayerController : MonoBehaviour {
     GameObject boss;
     public GameObject TextController;
 
-	public SoundManager soundManager;
 
 	public bool isGrounded = false;
 	Transform tagGround;
@@ -94,10 +91,10 @@ public class PlayerController : MonoBehaviour {
         }
 
         // keyBoardController
-        //axis = Input.GetAxisRaw ( "Horizontal" );
+        axis = Input.GetAxisRaw ( "Horizontal" );
 
         // TouchController
-		axis = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
+		//axis = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
 
         if ( currentBaseState.fullPathHash != passive ) {
 
@@ -115,13 +112,13 @@ public class PlayerController : MonoBehaviour {
 			        if ( staminaSlider.value > ATTACK_CONSUME ) {
 				        animator.SetTrigger ("Attack");
 				        staminaSlider.value -= STAMINA_CONSUME;
-				        soundManager.PlaySePunch ();
+				        //soundManager.PlaySePunch ();
 			        }
 		        }
 
 		        if ( Input.GetButtonDown ("Jump") ) {
 				    rig2d.velocity = new Vector2( rig2d.velocity.x, jumpPower );
-				    soundManager.PlaySeJump ();
+				  
 		        }
             }
         }
@@ -149,6 +146,7 @@ public class PlayerController : MonoBehaviour {
 		} else {
             animator.SetBool( "Jump", true );
         }
+
 
 		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
 			spriteRenderer.flipX = axis < 0;
@@ -210,7 +208,7 @@ public class PlayerController : MonoBehaviour {
                      ( distanceCheckX < 0 && spriteRenderer.flipX == true ) ) {
 				    block[i].GetComponent<BlockController> ().BlockDestroyAni ();
                     Debug.Log( "" + i );
-					soundManager.PlaySeBlock ();
+					//soundManager.PlaySeBlock ();
                 }
 			}
 		}
@@ -273,13 +271,10 @@ public class PlayerController : MonoBehaviour {
 
     // ダメージアニメション
     public void Passiveness( ) {
-		if (isDead) {
-			return;
-		}
+
 		distanceCheckX = boss.transform.position.x - transform.position.x;
         animator.SetBool( "Passiveness", true );
 		rig2d.velocity = new Vector2( distanceCheckX > 0 ? -4.0f : 4.0f, 2.0f );
-
     }
 
     // タッチ操作
@@ -309,7 +304,7 @@ public class PlayerController : MonoBehaviour {
 						if (swipeValue > 0) {//up swipe
 							//Jump ();
 							if (currentBaseState.fullPathHash != jump) {
-								rig2d.velocity = new Vector2 (rig2d.velocity.x, jumpPower);
+								rig2d.velocity = new Vector2 (rig2d.velocity.x, jumpPower + 5);
 								//soundManager.PlaySeJump ();
 							}
 							text.text = "Up Swipe";
@@ -357,8 +352,9 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	public void Test() {
-		animator.SetBool ("Passiveness", false);
+    void BallonDestroy() {
+		balloonController = GameObject.Find ("TextController");
+		balloonController.GetComponent<BalloonController> ().BalloonDestroy ();
 	}
 		
 }

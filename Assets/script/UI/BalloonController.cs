@@ -31,7 +31,6 @@ public class BalloonController : MonoBehaviour {
 	private AnimatorStateInfo currentBaseState;
 
 	static int jump = Animator.StringToHash("Base Layer.Jump");
-	static int dead = Animator.StringToHash("Base Layer.Dead");
 
 	void Awake() {
 		gameStatus = 0;

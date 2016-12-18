@@ -9,16 +9,12 @@ public class GameLogic : MonoBehaviour {
 	[SerializeField] BossController bossController;
 	[SerializeField] EnemyController enemyComtroller;
 	[SerializeField] ResultsController resultsController;
-	[SerializeField] BalloonController balloonController;
 
 	public enum GAME_STATUS {
 		Start,
 		Clear,
 		Over
-	};
-
-	const int MAX_HP = 100;
-	const int MIN_HP = 0;
+	}; 
 
 	public int gameStatus;
 
@@ -38,12 +34,10 @@ public class GameLogic : MonoBehaviour {
 		
 		if ( bossController.isDead ) {
 			gameStatus = (int)GAME_STATUS.Clear;
-			balloonController.Clear();
 		}
 
 		if ( playerController.isDead ) {
 			gameStatus = (int)GAME_STATUS.Over;
-			balloonController.Over ();
 		}
 
 	}

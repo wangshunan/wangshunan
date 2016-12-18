@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class TextController : MonoBehaviour {
 
-	public SoundManager soundManager;
-	public VoiceManager voiceManager;
+
+
 
 	public GameObject StartButton;
 	public GameObject vodke;
@@ -33,7 +33,7 @@ public class TextController : MonoBehaviour {
 	void Start () {
 		
 		SetNextLine (0);
-		voiceManager.PlayVoice(count);
+		SoundManager.Instance.PlayVoice ((int)SoundManager.VOICE_LIST.DIALOG_1);
 		vodke = GameObject.Find ("Vodke");
 		SkipButton = GameObject.Find ("SkipButton");
 
@@ -45,8 +45,7 @@ public class TextController : MonoBehaviour {
 			
 			if (currentLine < scenarios.Length && Input.GetMouseButtonDown (0) && count < 15 && IsStartButtonActive == false) {
 				count++;
-				voiceManager.PlayVoice (count);
-				soundManager.PlaySeButton ();
+				SoundManager.Instance.PlayVoice (count);
 				SetNextLine (0);
 			}
 			if (count == 11) {
@@ -85,8 +84,7 @@ public class TextController : MonoBehaviour {
 	public void OnSkipButtonCliked() {
 		
 		currentText = scenarios [15];
-		soundManager.PlaySeButton ();
-		voiceManager.StopVoice ();
+
 		IsStartButtonActive = true;
 		StartButton.SetActive (true);
 		SkipButton.SetActive (false);
@@ -98,10 +96,9 @@ public class TextController : MonoBehaviour {
 
 	public void OnStartButtonClicked(){
 		Invoke ("LoadSceneBattle", 1);
-		soundManager.PlaySeGameStart ();
-		soundManager.StopSeButton ();
+
 		currentText = scenarios [15];
-		voiceManager.StopVoice ();
+
 	}
 	public void StartButtonAlive() {
 		StartButton.SetActive (true);

@@ -5,13 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class ResultsController : MonoBehaviour {
 
-	[SerializeField] BalloonController balloonController;
-
 	const float MAX_HP = 100;
 	const float HALF_HP = 50;
 	const float MIN_HP = 0;
-
-	[SerializeField] GameLogic gameLogic;
 
 	float alpha = 0.0f;
 	private int Color;
@@ -67,13 +63,12 @@ public class ResultsController : MonoBehaviour {
 		}
 
 		if (clearImage.transform.position.y <= 2.0f) {
-			balloonController.BalloonDestroy ();
 			retry.SetActive (true);
 			title.SetActive (true);
 		}
 	}
 
-	public void GameOver( ) {
+	public void GameOver() {
 		moveControllerPanel.SetActive (false);
 		if (alpha <= 0.6f) {
 			alpha += 0.01f;
@@ -88,7 +83,6 @@ public class ResultsController : MonoBehaviour {
 		}
 
 		if (overImage.transform.position.y <= 2.0f) {
-			balloonController.BalloonDestroy ();
 			retry.SetActive (true);
 			title.SetActive (true);
 		}

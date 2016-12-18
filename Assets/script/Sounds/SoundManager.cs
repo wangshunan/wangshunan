@@ -1,61 +1,155 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class SoundManager : MonoBehaviour {
-	
-	private AudioSource BgmMenuOne;
-	private AudioSource BgmMenuTwo;
-	private AudioSource BgmZako;
-	private AudioSource SeButton;
-	private AudioSource SeBack;
-	private AudioSource SeGameStart;
-	private AudioSource SePunch;
-	private AudioSource SeJump;
-	private AudioSource SeBlock;
-
-	void Start() {
-		AudioSource[] audioSources = GetComponents<AudioSource> ();
-		BgmMenuOne = audioSources [0];
-		SeButton = audioSources [1];
-		SeBack = audioSources [2];
-		SeGameStart = audioSources [3];
-		BgmMenuTwo = audioSources [4];
-		BgmZako = audioSources [5];
-		SePunch = audioSources [6];
-		SeJump = audioSources [7];
-		SeBlock = audioSources [8];
+	public enum BGM_LIST{
+		MENU,
+		ZAKO
+	}
+	public enum SE_LIST {
+		BACK,
+		BUTTON,
+		GAME_START,
+		PUNCH,
+		BLOCK
+	}
+	public enum VOICE_LIST {
+		NONE,
+		DIALOG_1,
+		DIALOG_2,
+		DIALOG_3,
+		DIALOG_4,
+		DIALOG_5,
+		DIALOG_6,
+		DIALOG_7,
+		DIALOG_8,
+		DIALOG_9,
+		DIALOG_10,
+		DIALOG_11,
+		DIALOG_12,
+		DIALOG_13,
+		DIALOG_14,
+		DIALOG_15,
+		END
 	}
 
-	public void PlayBgmMenuOne() {
-		if (BgmMenuOne != null) {
-			BgmMenuOne.PlayOneShot (BgmMenuOne.clip);
+	protected static SoundManager instance;
+
+	public static SoundManager Instance {
+		get {
+			if(instance == null) {
+				
+				instance = (SoundManager) FindObjectOfType(typeof(SoundManager));
+
+				if (instance == null) {
+					Debug.LogError("SoundManager Instance Error");
+				}
+			}
+			return instance;
 		}
 	}
-	public void PlayBgmMenutwo() {
-		BgmMenuTwo.PlayOneShot (BgmMenuTwo.clip);
+
+	public const int maxSeSources = 5;
+	public const int maxVoiceSources = 16;
+	// === AudioSource ===
+	// BGM
+	private AudioSource BGMsource;
+	// SE
+	private AudioSource SEsources;
+	// 音声
+	private AudioSource VoiceSources;
+	// === AudioClip ===
+	// BGM
+	public AudioClip[] BGM;
+	// SE
+	public AudioClip[] SE;
+	// 音声
+	public AudioClip[] Voice;
+
+
+
+	void Awake (){
+		DontDestroyOnLoad (transform.gameObject);
+		GameObject[] obj = GameObject.FindGameObjectsWithTag("SoundManager");
+		if( obj.Length > 1 ){
+			// 既に存在しているなら削除
+			Destroy(gameObject);
+		}else{
+			// 音管理はシーン遷移では破棄させない
+			DontDestroyOnLoad(gameObject);
+		}
+
+		// 全てのAudioSourceコンポーネントを追加する
+
+		// BGM AudioSource
+		BGMsource = gameObject.AddComponent<AudioSource>();
+		// BGMはループを有効にする
+		BGMsource.loop = true;
+
+		// SE AudioSource
+		SEsources = gameObject.AddComponent<AudioSource>();
+
+		// 音声 AudioSource
+		VoiceSources = gameObject.AddComponent<AudioSource> ();
 	}
-	public void PlayBgmMenuZako() {
-		BgmZako.PlayOneShot (BgmZako.clip);
+		
+	// ***** BGM再生 *****
+	// BGM再生
+	public void PlayBGM(int index){
+		if( 0 > index || BGM.Length <= index ){
+			return;
+		}
+		// 同じBGMの場合は何もしない
+		if( BGMsource.clip == BGM[index] ){
+			return;
+		}
+		BGMsource.Stop();
+		BGMsource.clip = BGM[index];
+		BGMsource.Play();
 	}
-	public void PlaySeButton() {
-		SeButton.PlayOneShot (SeButton.clip);
+
+	// BGM停止
+	public void StopBGM(){
+		BGMsource.Stop();
+		BGMsource.clip = null;
 	}
-	public void StopSeButton() {
-		SeButton.Stop ();
+
+	// ***** SE再生 *****
+	// SE再生
+	public void PlaySE( int index ) {
+		if( 0 > index || SE.Length <= index ){
+			return;
+		}
+		// 同じBGMの場合は何もしない
+		if( SEsources.clip == SE[index] ){
+			return;
+		}
+		SEsources.clip = SE[index];
+		SEsources.Play();
 	}
-	public void PlaySeBack() {
-		SeBack.PlayOneShot (SeBack.clip);
+
+	// SE停止
+	public void StopSE(){
+		SEsources.Stop ();
+		SEsources.clip = null;
 	}
-	public void PlaySeGameStart() {
-		SeGameStart.PlayOneShot (SeGameStart.clip);
+
+	// ***** Voice再生 *****
+	// Vocie再生
+	public void PlayVoice( int index ) {
+		if( 0 > index || Voice.Length <= index ){
+			return;
+		}
+		// 同じBGMの場合は何もしない
+		if( VoiceSources.clip == Voice[index] ){
+			return;
+		}
+		VoiceSources.clip = Voice[index];
+		VoiceSources.Play();
 	}
-	public void PlaySePunch() {
-		SePunch.PlayOneShot (SePunch.clip);
-	}
-	public void PlaySeJump() {
-		SeJump.PlayOneShot (SeJump.clip);
-	}
-	public void PlaySeBlock() {
-		SeBlock.PlayOneShot (SeBlock.clip);
-	}
+
+
+
 }
+
