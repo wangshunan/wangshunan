@@ -2,7 +2,13 @@
 using System.Collections;
 
 public class TitleController : MonoBehaviour {
-
+    private enum BUTTON_LIST {
+        NEW_GAME,
+        LOAD_GAME,
+        OPTION,
+        RECORD,
+        EXIT
+    }
     public GameObject MenuPanel;
     public GameObject VolumePanel;
     public GameObject OptionPanel;
@@ -17,20 +23,60 @@ public class TitleController : MonoBehaviour {
 	public GameObject StageIntrodudePanel;
 	public GameObject RecordPanel;
 	public GameObject CharacterIntrodudePanel;
-	public GameObject Chicken;
-
-
-
+	
+    public GameObject[ ] MainButton;
+    public GameObject[ ] ButtonEffect;
     //メーニュー切り替え処理
 
+  
+    public void OnMainButtonCliked( int ButtonName ) {
+        EffectOn( ButtonName );
+        Invoke( "EffectOff", 1 ); 
+        //ニューゲームボタン
+        if ( ButtonName == ( int )BUTTON_LIST.NEW_GAME ) {
+            MenuPanel.SetActive( false );
+            LevelSelectPanel.SetActive( true );
+           
+        }
+        if( ButtonName == ( int )BUTTON_LIST.LOAD_GAME ) {
+        }
+         //オプションメーニュー選択ボタン
+        if( ButtonName == ( int )BUTTON_LIST.OPTION ) {
+            MenuPanel.SetActive( false );
+            OptionPanel.SetActive( true );
+        }
+        //レコードボタン
+        if( ButtonName == ( int )BUTTON_LIST.RECORD ) {
+            MenuPanel.SetActive( false );
+		    RecordPanel.SetActive( true );
 
-    //ニューゲームボタン
-    public void OnNewGameButtonClicked() {
-        MenuPanel.SetActive( false );
-        LevelSelectPanel.SetActive( true );
+        }
+        if( ButtonName == ( int )BUTTON_LIST.EXIT ) {
+            //If we are running in a standalone build of the game
+	        #if UNITY_STANDALONE
+		    //Quit the application
+		    Application.Quit();
+    	    #endif
 
+		    //If we are running in the editor
+	        #if UNITY_EDITOR
+		    //Stop playing the scene
+		    UnityEditor.EditorApplication.isPlaying = false;
+	        #endif
+        }
+       
+    }
+    
+    void EffectOn( int button ) {
+        ButtonEffect[ button ].SetActive( true );
     }
 
+    void EffectOff( ) {
+        for( int i = 0; i < 5; i++ ) {
+            ButtonEffect[ i ].SetActive( false );
+        }
+    
+    }
     //レベル選択ボタン
     public void OnLevelSelectButtonCliked() {
         LevelSelectPanel.SetActive( false );
@@ -38,12 +84,7 @@ public class TitleController : MonoBehaviour {
 
     }
 
-    //オプションメーニュー選択ボタン
-    public void OnOptionButtonClicked() {
-        MenuPanel.SetActive( false );
-        OptionPanel.SetActive( true );
 
-    }
 
     //言語選択メーニューボタン
     public void OnLaunchButtonClicked() {
@@ -65,12 +106,7 @@ public class TitleController : MonoBehaviour {
         VolumePanel.SetActive( true );
 
     }
-	//レコードボタン
-	public void OnRecordButtonCliked() {
-		MenuPanel.SetActive( false );
-		RecordPanel.SetActive( true );
 
-	}
     //一個前メーニューに戻るボタン
     public void OnOptionBackButton() {
         if ( LaunchPanel == true ) {
@@ -137,21 +173,7 @@ public class TitleController : MonoBehaviour {
 
     }
 
-    public void ExitButtonCliked()
-	{
-		//If we are running in a standalone build of the game
-	#if UNITY_STANDALONE
-		//Quit the application
-		Application.Quit();
-	#endif
 
-		//If we are running in the editor
-	#if UNITY_EDITOR
-		//Stop playing the scene
-		UnityEditor.EditorApplication.isPlaying = false;
-	#endif
-
-	}
 
 	public void OnStageIntroduceButtonCliked() {
 		
