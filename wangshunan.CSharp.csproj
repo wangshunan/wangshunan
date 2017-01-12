@@ -82,6 +82,9 @@
     <Compile Include="Assets\MoveController\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
     <Compile Include="Assets\MoveController\Standard Assets\CrossPlatformInput\Scripts\TouchPad.cs" />
     <Compile Include="Assets\MoveController\Standard Assets\CrossPlatformInput\Scripts\VirtualInput.cs" />
+    <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\BattleSpriteAction.cs" />
+    <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\EmoteSpriteAction.cs" />
+    <Compile Include="Assets\UnityChan\2DUnitychan\Scenes\Scripts\SpriteAction.cs" />
     <Compile Include="Assets\script\Camera\CameraController.cs" />
     <Compile Include="Assets\script\Characters\BossController.cs" />
     <Compile Include="Assets\script\Characters\EnemyController.cs" />

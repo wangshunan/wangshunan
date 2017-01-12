@@ -31,7 +31,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	void GameStatusUpData( ) {
-		
+		/*
 		if ( bossController.isDead ) {
 			gameStatus = (int)GAME_STATUS.Clear;
 		}
@@ -39,7 +39,7 @@ public class GameLogic : MonoBehaviour {
 		if ( playerController.isDead ) {
 			gameStatus = (int)GAME_STATUS.Over;
 		}
-
+        */
 	}
 		
 }
