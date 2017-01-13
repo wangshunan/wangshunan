@@ -5,11 +5,19 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour {
 
+    Animator animator;
+    Rigidbody2D rig2d;
+
     GameObject[] enemy;
     GameObject[] block;
     GameObject[] item;
     GameObject boss;
     public GameObject TextController;
+
+
+	public bool isGrounded = false;
+	Transform tagGround;
+	public LayerMask playerMask;
 
     private float speed;
     private float jumpPower;
@@ -28,6 +36,7 @@ public class PlayerController : MonoBehaviour {
     private const float ATTACK_CONSUME = 10.0f;
 
 
+	private SpriteRenderer spriteRenderer;
 	private float distanceCheckX;
 	private float distanceCheckY;
     private AnimatorStateInfo currentBaseState;  // base layerで使われる、アニメーターの現在の状態の参照
@@ -45,21 +54,7 @@ public class PlayerController : MonoBehaviour {
 	public float minSwipeDistX;
 	public float tapDis;
 	private Vector2 startPos;
-
-    [SerializeField] private float characterHeightOffset = 0.2f;
-	[SerializeField] LayerMask groundMask;
-
-	[SerializeField, HideInInspector]Animator animator;
-	[SerializeField, HideInInspector]SpriteRenderer spriteRenderer;
-	[SerializeField, HideInInspector]Rigidbody2D rig2d;
-
-    static int hashSpeed = Animator.StringToHash ("Speed");
-	static int hashFallSpeed = Animator.StringToHash ("FallSpeed");
-	static int hashGroundDistance = Animator.StringToHash ("GroundDistance");
-	static int hashIsCrouch = Animator.StringToHash ("IsCrouch");
-	static int hashAttack = Animator.StringToHash ("Attack");
-    static int hashDamage = Animator.StringToHash ("Damage");
-	static int hashIsDead = Animator.StringToHash ("IsDead");
+	public Text text;
 
     // アニメーター各ステートへの参照
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
@@ -67,6 +62,7 @@ public class PlayerController : MonoBehaviour {
     static int passive = Animator.StringToHash( "Base Layer.Passiveness" );
 
 	void Awake () {
+		tagGround = GameObject.Find (this.name + "/tag_ground").transform;
 		enemy = GameObject.FindGameObjectsWithTag ("Enemy");
 		boss = GameObject.Find ("Vodke");
 		spriteRenderer = GetComponent<SpriteRenderer> ();
@@ -77,8 +73,7 @@ public class PlayerController : MonoBehaviour {
 		
 
 	// Use this for initialization
-	void Start () {	
-        
+	void Start () {		
 	}
 	
 	void Update () {
@@ -94,11 +89,10 @@ public class PlayerController : MonoBehaviour {
         if ( isDead || currentBaseState.fullPathHash == passive ) {
             return;
         }
-        
+
         // keyBoardController
-        axis = Input.GetAxisRaw ("Horizontal");
-        Debug.Log( axis );
-        
+        axis = Input.GetAxisRaw ( "Horizontal" );
+
         // TouchController
 		//axis = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
 
@@ -106,14 +100,17 @@ public class PlayerController : MonoBehaviour {
 
 		    //　キャラを移動させる
 		    if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
-			   rig2d.transform.position += new Vector3( axis * speed, 0, 0 );
-            }
+			    rig2d.transform.position += new Vector3 ( ( axis > 0 ? 1 : -1 ) * speed * Time.deltaTime, 0 );
+			    animator.SetBool ( "Run", true );
+		    } else {
+			    animator.SetBool ( "Run", false );
+		    }
 
-            if ( currentBaseState.fullPathHash != attack ) {
+            if ( isGrounded && currentBaseState.fullPathHash != attack ) {
 		        // 攻撃
 		        if ( Input.GetKeyDown( KeyCode.Z ) ) {
 			        if ( staminaSlider.value > ATTACK_CONSUME ) {
-				        animator.SetTrigger (hashAttack);
+				        animator.SetTrigger ("Attack");
 				        staminaSlider.value -= STAMINA_CONSUME;
 				        //soundManager.PlaySePunch ();
 			        }
@@ -132,18 +129,24 @@ public class PlayerController : MonoBehaviour {
     // プレイヤー状態更新
     private void PlayerStatasUpDate() {
 
+        // 接地判定
+        isGrounded = Physics2D.Linecast( rig2d.position, tagGround.position, playerMask );
+
         // 現在ANIMATOR状態を取得
         currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
-        var distanceFromGround = Physics2D.Raycast (transform.position, Vector3.down, 10, groundMask);
-        Debug.DrawRay(transform.position, distanceFromGround.point - new Vector2( transform.position.x, transform.position.y ), Color.blue, 3, true);
+
         if ( !isDead ) {
             staminaSlider.value += 2 * Time.deltaTime;
         }
-        //Debug.Log( distanceFromGround.distance );
-		// update animator parameters
-		animator.SetFloat (hashGroundDistance, distanceFromGround.distance == 0 ? 99 : distanceFromGround.distance - characterHeightOffset);
-		animator.SetFloat (hashFallSpeed, rig2d.velocity.y);
-		animator.SetFloat (hashSpeed, Mathf.Abs (axis) );
+
+
+        // 接地判定
+		if ( isGrounded ) {
+			animator.SetBool( "Jump", false );
+		} else {
+            animator.SetBool( "Jump", true );
+        }
+
 
 		if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
 			spriteRenderer.flipX = axis < 0;
@@ -166,10 +169,9 @@ public class PlayerController : MonoBehaviour {
                 isDead = true;
 		}
 
-        // 落下死亡判定
-        /*if ( gameObject.transform.position.y <= -4 ) {
+        if ( gameObject.transform.position.y <= -4 ) {
            isDead = true;
-        }*/
+        }
     }
 
     // 攻撃判定
@@ -250,8 +252,8 @@ public class PlayerController : MonoBehaviour {
 
     // プレイヤーステータス初期化
 	private void StatasInit( ) {
-		hypertensionSpeed = 1.0f;
-		healthSpeed = 0.1f;
+		hypertensionSpeed = 3.0f;
+		healthSpeed = 4.0f;
 		hypertensionJumpPower = 3.5f;
 		healthJumpPower = 12.0f;
 		speed = healthSpeed;
@@ -271,6 +273,7 @@ public class PlayerController : MonoBehaviour {
     public void Passiveness( ) {
 
 		distanceCheckX = boss.transform.position.x - transform.position.x;
+        animator.SetBool( "Passiveness", true );
 		rig2d.velocity = new Vector2( distanceCheckX > 0 ? -4.0f : 4.0f, 2.0f );
     }
 
@@ -304,12 +307,14 @@ public class PlayerController : MonoBehaviour {
 								rig2d.velocity = new Vector2 (rig2d.velocity.x, jumpPower + 5);
 								//soundManager.PlaySeJump ();
 							}
+							text.text = "Up Swipe";
 						}
 
 						//jumpEnd
 
 						else if (swipeValue < 0) {//down swipe
 							//Shrink ();
+							text.text = "Down Swipe";
 						}
 					}
 
@@ -321,8 +326,10 @@ public class PlayerController : MonoBehaviour {
 
 						if (swipeValue > 0) {//right swipe
 							//MoveRight ();
+							text.text = "Right Swipe";
 						} else if (swipeValue < 0) {//left swipe
 							//MoveLeft ();
+							text.text = "Left Swipe";
 						}
 					}
 
@@ -336,6 +343,7 @@ public class PlayerController : MonoBehaviour {
 								staminaSlider.value -= STAMINA_CONSUME;
 							}
 						}
+						text.text = "tap";
 					}
 					break;
 

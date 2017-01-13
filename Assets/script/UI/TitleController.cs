@@ -7,7 +7,9 @@ public class TitleController : MonoBehaviour {
         LOAD_GAME,
         OPTION,
         RECORD,
-        EXIT
+        EXIT,
+        //OnStageIntroducePanel
+        GO
     }
     public GameObject MenuPanel;
     public GameObject VolumePanel;
@@ -35,15 +37,15 @@ public class TitleController : MonoBehaviour {
         //ニューゲームボタン
         if ( ButtonName == ( int )BUTTON_LIST.NEW_GAME ) {
             MenuPanel.SetActive( false );
-            LevelSelectPanel.SetActive( true );
+            StageSelectPanel.SetActive(true);
            
         }
         if( ButtonName == ( int )BUTTON_LIST.LOAD_GAME ) {
         }
          //オプションメーニュー選択ボタン
         if( ButtonName == ( int )BUTTON_LIST.OPTION ) {
-            MenuPanel.SetActive( false );
-            OptionPanel.SetActive( true );
+            MenuPanel.SetActive(false);
+            VolumePanel.SetActive(true);
         }
         //レコードボタン
         if( ButtonName == ( int )BUTTON_LIST.RECORD ) {
@@ -109,23 +111,13 @@ public class TitleController : MonoBehaviour {
 
     //一個前メーニューに戻るボタン
     public void OnOptionBackButton() {
-        if ( LaunchPanel == true ) {
-            LaunchPanel.SetActive( false );
-        }
-        if ( VolumePanel == true ) {
-            VolumePanel.SetActive( false );
-        }
-        if ( CharatePanel == true ) {
-            CharatePanel.SetActive( false );
-        }
-        OptionPanel.SetActive( true );
-
-
+        MenuPanel.SetActive(true);
+        VolumePanel.SetActive(false);
     }    
 
     public void OnStageSelectBackButtonCliked() {
         StageSelectPanel.SetActive( false );
-        LevelSelectPanel.SetActive( true );
+        MenuPanel.SetActive(true);
 
     }
     public void OnStartButtonCliked() {
@@ -158,24 +150,33 @@ public class TitleController : MonoBehaviour {
 		RecordPanel.SetActive (true);
 
 	}
-	public void OnNotYetButtonClicked(){
-		StageIntrodudePanel.SetActive (false);
-		StageSelectPanel.SetActive (true);
 
-	}
 
     //メインメーニューに戻るボタン
     public void OnBackButtonCliked() {
         LevelSelectPanel.SetActive( false );
-        OptionPanel.SetActive( false );
+        //OptionPanel.SetActive( false );
 		RecordPanel.SetActive( false );
         MenuPanel.SetActive( true );
 
     }
 
+	public void OnStageIntroduceButtonCliked( int ButtonName) {
+        EffectOn(ButtonName);
+        Invoke("EffectOff", 1);
+        //
+        if (ButtonName == (int)BUTTON_LIST.GO)
+        {
+            Invoke("LoadSceneTalking", 1);
+        }
 
-
-	public void OnStageIntroduceButtonCliked() {
-		
 	}
+
+    public void OnNotYetButtonClicked()
+    {
+
+        StageIntrodudePanel.SetActive(false);
+        StageSelectPanel.SetActive(true);
+
+    }
 }

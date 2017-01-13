@@ -70,28 +70,7 @@ public class SoundManager : MonoBehaviour {
 
 
 	void Awake (){
-		DontDestroyOnLoad (transform.gameObject);
-		GameObject[] obj = GameObject.FindGameObjectsWithTag("SoundManager");
-		if( obj.Length > 1 ){
-			// 既に存在しているなら削除
-			Destroy(gameObject);
-		}else{
-			// 音管理はシーン遷移では破棄させない
-			DontDestroyOnLoad(gameObject);
-		}
-
-		// 全てのAudioSourceコンポーネントを追加する
-
-		// BGM AudioSource
-		BGMsource = gameObject.AddComponent<AudioSource>();
-		// BGMはループを有効にする
-		BGMsource.loop = true;
-
-		// SE AudioSource
-		SEsources = gameObject.AddComponent<AudioSource>();
-
-		// 音声 AudioSource
-		VoiceSources = gameObject.AddComponent<AudioSource> ();
+		DontDestroy ();
 	}
 		
 	// ***** BGM再生 *****
@@ -149,7 +128,29 @@ public class SoundManager : MonoBehaviour {
 		VoiceSources.Play();
 	}
 
+	void DontDestroy() {
+		DontDestroyOnLoad (transform.gameObject);
+		GameObject[] obj = GameObject.FindGameObjectsWithTag ("SoundManager");
+		if (obj.Length > 1) {
+			// 既に存在しているなら削除
+			Destroy (gameObject);
+		} else {
+			// 音管理はシーン遷移では破棄させない
+			DontDestroyOnLoad (gameObject);
+		}
 
+		// 全てのAudioSourceコンポーネントを追加する
 
+		// BGM AudioSource
+		BGMsource = gameObject.AddComponent<AudioSource> ();
+		// BGMはループを有効にする
+		BGMsource.loop = true;
+
+		// SE AudioSource
+		SEsources = gameObject.AddComponent<AudioSource> ();
+
+		// 音声 AudioSource
+		VoiceSources = gameObject.AddComponent<AudioSource> ();
+	}
 }
 
