@@ -4,7 +4,7 @@ using System.Collections;
 public class TitleController : MonoBehaviour {
     private enum BUTTON_LIST {
         NEW_GAME,
-        LOAD_GAME,
+        //LOAD_GAME,
         OPTION,
         RECORD,
         EXIT,
@@ -40,13 +40,16 @@ public class TitleController : MonoBehaviour {
             StageSelectPanel.SetActive(true);
            
         }
-        if( ButtonName == ( int )BUTTON_LIST.LOAD_GAME ) {
+
+        /*if( ButtonName == ( int )BUTTON_LIST.LOAD_GAME ) {
         }
+        */
          //オプションメーニュー選択ボタン
         if( ButtonName == ( int )BUTTON_LIST.OPTION ) {
             MenuPanel.SetActive(false);
             VolumePanel.SetActive(true);
         }
+		
         //レコードボタン
         if( ButtonName == ( int )BUTTON_LIST.RECORD ) {
             MenuPanel.SetActive( false );

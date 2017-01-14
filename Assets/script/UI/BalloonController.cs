@@ -72,36 +72,6 @@ public class BalloonController : MonoBehaviour {
 
 	void Ballon() {
 
-		count += Time.deltaTime;
-		if (( count >= 3.0f && count < 6.0f ) || currentBaseState.fullPathHash == jump ) {
-			//balloon.transform.position = new Vector3 (0, -100);
-			balloon.SetActive( false );
-		} else {				
-			if (playerBooldPressureSlider.value < 50) {
-				boold = true;
-			}
-			if ( player.transform.position.y <= -1.15297f ) {
-				if (playerBooldPressureSlider.value >= 50 && boold == true) {
-					currentText = scenarios [7];
-					count = 0.0f;
-					//balloon.transform.position = position;
-					balloon.SetActive( true );
-					boold = false;
-				} else if (count >= 6.0f) {
-					count = 0.0f;
-					rand = Random.Range (0, 7);
-					currentText = scenarios [rand];
-					//balloon.transform.position = position;
-					balloon.SetActive( true );
-				}
-				if (playerBooldPressureSlider.value == 100) {
-					currentText = scenarios [8];
-					//balloon.transform.position = position;
-					balloon.SetActive( true );
-				}
-			}
-			uiText.text = currentText.Substring (0, currentText.Length);
-		}
 	}
 
 	public void BalloonDestroy(){
