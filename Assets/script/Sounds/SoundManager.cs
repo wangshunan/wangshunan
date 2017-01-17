@@ -31,6 +31,16 @@ public class SoundManager : MonoBehaviour {
 		DIALOG_13,
 		DIALOG_14,
 		DIALOG_15,
+        DIALOG_16,
+        DIALOG_17,
+        DIALOG_18,
+        DIALOG_19,
+        DIALOG_20,
+        DIALOG_21,
+        DIALOG_22,
+        DIALOG_23,
+        DIALOG_24,
+        DIALOG_25,
 		END
 	}
 
@@ -51,7 +61,7 @@ public class SoundManager : MonoBehaviour {
 	}
 
 	public const int maxSeSources = 5;
-	public const int maxVoiceSources = 16;
+	public const int maxVoiceSources = 27;
 	// === AudioSource ===
 	// BGM
 	private AudioSource BGMsource;
@@ -61,57 +71,57 @@ public class SoundManager : MonoBehaviour {
 	private AudioSource VoiceSources;
 	// === AudioClip ===
 	// BGM
-	public AudioClip[] BGM;
+	public AudioClip[ ] BGM;
 	// SE
-	public AudioClip[] SE;
+	public AudioClip[ ] SE;
 	// 音声
-	public AudioClip[] Voice;
+	public AudioClip[ ] Voice;
+ 
 
 
-
-	void Awake (){
-		DontDestroyOnLoad (transform.gameObject);
-		GameObject[] obj = GameObject.FindGameObjectsWithTag("SoundManager");
+	void Awake( ){
+		DontDestroyOnLoad( transform.gameObject );
+		GameObject[ ] obj = GameObject.FindGameObjectsWithTag( "SoundManager" );
 		if( obj.Length > 1 ){
 			// 既に存在しているなら削除
-			Destroy(gameObject);
+			Destroy( gameObject );
 		}else{
 			// 音管理はシーン遷移では破棄させない
-			DontDestroyOnLoad(gameObject);
+			DontDestroyOnLoad( gameObject );
 		}
 
 		// 全てのAudioSourceコンポーネントを追加する
 
 		// BGM AudioSource
-		BGMsource = gameObject.AddComponent<AudioSource>();
+		BGMsource = gameObject.AddComponent<AudioSource>( );
 		// BGMはループを有効にする
 		BGMsource.loop = true;
 
 		// SE AudioSource
-		SEsources = gameObject.AddComponent<AudioSource>();
+		SEsources = gameObject.AddComponent<AudioSource>( );
 
 		// 音声 AudioSource
-		VoiceSources = gameObject.AddComponent<AudioSource> ();
+		VoiceSources = gameObject.AddComponent<AudioSource>( );
 	}
 		
 	// ***** BGM再生 *****
 	// BGM再生
-	public void PlayBGM(int index){
+	public void PlayBGM( int index ){
 		if( 0 > index || BGM.Length <= index ){
 			return;
 		}
 		// 同じBGMの場合は何もしない
-		if( BGMsource.clip == BGM[index] ){
+		if( BGMsource.clip == BGM[ index ] ){
 			return;
 		}
-		BGMsource.Stop();
-		BGMsource.clip = BGM[index];
-		BGMsource.Play();
+		BGMsource.Stop( );
+		BGMsource.clip = BGM[ index ];
+		BGMsource.Play( );
 	}
 
 	// BGM停止
-	public void StopBGM(){
-		BGMsource.Stop();
+	public void StopBGM( ){
+		BGMsource.Stop( );
 		BGMsource.clip = null;
 	}
 
@@ -121,17 +131,17 @@ public class SoundManager : MonoBehaviour {
 		if( 0 > index || SE.Length <= index ){
 			return;
 		}
-		// 同じBGMの場合は何もしない
-		if( SEsources.clip == SE[index] ){
+		
+		if( SEsources.clip == SE[ index ] ){
 			return;
 		}
-		SEsources.clip = SE[index];
-		SEsources.Play();
+		SEsources.clip = SE[ index ];
+		SEsources.Play( );
 	}
 
 	// SE停止
-	public void StopSE(){
-		SEsources.Stop ();
+	public void StopSE( ){
+		SEsources.Stop( );
 		SEsources.clip = null;
 	}
 
@@ -142,11 +152,15 @@ public class SoundManager : MonoBehaviour {
 			return;
 		}
 		// 同じBGMの場合は何もしない
-		if( VoiceSources.clip == Voice[index] ){
+		if( VoiceSources.clip == Voice[ index ] ){
 			return;
 		}
-		VoiceSources.clip = Voice[index];
-		VoiceSources.Play();
+		VoiceSources.clip = Voice[ index ];
+		VoiceSources.Play( );
+	}
+    public void StopVoice( ){
+		VoiceSources.Stop( );
+		VoiceSources.clip = null;
 	}
 
 

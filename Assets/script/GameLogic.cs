@@ -7,8 +7,7 @@ public class GameLogic : MonoBehaviour {
 
 	[SerializeField] PlayerController playerController;
 	[SerializeField] BossController bossController;
-	[SerializeField] EnemyController enemyComtroller;
-	[SerializeField] ResultsController resultsController;
+
 
 	public enum GAME_STATUS {
 		Start,
@@ -31,7 +30,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	void GameStatusUpData( ) {
-		/*
+		
 		if ( bossController.isDead ) {
 			gameStatus = (int)GAME_STATUS.Clear;
 		}
@@ -39,7 +38,7 @@ public class GameLogic : MonoBehaviour {
 		if ( playerController.isDead ) {
 			gameStatus = (int)GAME_STATUS.Over;
 		}
-        */
+
 	}
 		
 }
