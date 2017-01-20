@@ -95,6 +95,7 @@
     <Compile Include="Assets\script\Items\BlockController.cs" />
     <Compile Include="Assets\script\Items\ItemController.cs" />
     <Compile Include="Assets\script\Items\TutorialController.cs" />
+    <Compile Include="Assets\script\MoveController.cs" />
     <Compile Include="Assets\script\Results\BattleUiController.cs" />
     <Compile Include="Assets\script\Results\BattleUiManager.cs" />
     <Compile Include="Assets\script\Results\ResultsController.cs" />

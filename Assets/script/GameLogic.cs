@@ -26,7 +26,7 @@ public class GameLogic : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		GameStatusUpData ();
+		//GameStatusUpData ();
 	}
 
 	void GameStatusUpData( ) {

@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class TextController : MonoBehaviour {
+
+    [SerializeField] GameObject moveController;
 	public static TextController Instance {
 		set;
 		get;
@@ -34,7 +36,7 @@ public class TextController : MonoBehaviour {
 	public bool IsCompleteDisplayText {
 		get{ return Time.time > timeElapsed + timeUntilDisplay;}	
 	}
-
+    
 	void Start( ) {
         vodke = GameObject.Find( "Vodke" );
 		SkipButton = GameObject.Find ( "SkipButton" );
@@ -103,8 +105,7 @@ public class TextController : MonoBehaviour {
 		lastUpdateCharacter = -1;
 	}
 
-	public void OnSkipButtonCliked() {
-		
+	public void OnSkipButtonCliked() {	
 		currentText = scenarios [15];
         IsStartButtonActive = true;
 		StartButton.SetActive (true);
@@ -123,6 +124,15 @@ public class TextController : MonoBehaviour {
 	public void StartButtonAlive( ) {
 		StartButton.SetActive (true);
 	}
+    
+    public void BossStageButtonClicked() {
+        SceneManager.LoadScene( "TalkingBoss" );
+        SoundManager.Instance.StopVoice( );
+    }
 
-
+    public void tsetButtonClicked() {
+       moveController.SetActive( true );
+       moveController.GetComponent<MoveController>().movePlay(); 
+        SoundManager.Instance.StopVoice( );
+    }
 }

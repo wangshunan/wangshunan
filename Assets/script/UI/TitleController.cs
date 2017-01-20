@@ -10,6 +10,7 @@ public class TitleController : MonoBehaviour {
         //OnStageIntroducePanel
         GO
     }
+    [SerializeField]MoveController movieController;
     public GameObject MenuPanel;
     public GameObject VolumePanel;
     public GameObject StageSelectPanel;
@@ -20,6 +21,7 @@ public class TitleController : MonoBehaviour {
     public GameObject[] BackButton;
 	public GameObject StageIntrodudePanel;
 	public GameObject CharacterIntrodudePanel;
+    public GameObject MovieController;
 	
     public GameObject[ ] MainButton;
     public GameObject[ ] ButtonEffect;
@@ -44,7 +46,8 @@ public class TitleController : MonoBehaviour {
         //レコードボタン
 		if( ButtonName == ( int )BUTTON_LIST.CREDIT ) {
             MenuPanel.SetActive( false );
-		    //RecordPanel.SetActive( true );
+            MovieController.SetActive( true );
+            movieController.movePlay();
 
         }
         if( ButtonName == ( int )BUTTON_LIST.EXIT ) {
