@@ -61,7 +61,7 @@ public class BossController : MonoBehaviour {
 		}*/
 	}
 
-	void Update() {
+	public void Controller() {
 		
 		statusUpDate ();
 

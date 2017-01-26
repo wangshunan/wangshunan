@@ -5,7 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class ResultsController : MonoBehaviour {
 
-    [SerializeField]ResultsManager resultsManager;
+    [SerializeField]
+    ResultsManager resultsManager;
+
+    [SerializeField]
+    PauseSystem pause;
 
 	const float MAX_HP = 100;
 	const float HALF_HP = 50;
@@ -34,6 +38,7 @@ public class ResultsController : MonoBehaviour {
         continuePanel = GameObject.Find("Continue");
 		balloonStatus = GameObject.Find ("TextController");
         resultsManager.GetComponent<ResultsManager>();
+        pause = GameObject.Find( "GameLogic" ).GetComponent<PauseSystem>();
 	}
 
 	// Use this for initialization

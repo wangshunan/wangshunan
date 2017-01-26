@@ -88,6 +88,7 @@
     <Compile Include="Assets\script\Camera\CameraController.cs" />
     <Compile Include="Assets\script\Characters\BossController.cs" />
     <Compile Include="Assets\script\Characters\EnemyController.cs" />
+    <Compile Include="Assets\script\Characters\EnemyManager.cs" />
     <Compile Include="Assets\script\Characters\PlayerController.cs" />
     <Compile Include="Assets\script\Characters\ZakoController.cs" />
     <Compile Include="Assets\script\GameLogic.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Assets\script\Items\ItemController.cs" />
     <Compile Include="Assets\script\Items\TutorialController.cs" />
     <Compile Include="Assets\script\MoveController.cs" />
+    <Compile Include="Assets\script\PauseSystem.cs" />
     <Compile Include="Assets\script\Results\BattleUiController.cs" />
     <Compile Include="Assets\script\Results\BattleUiManager.cs" />
     <Compile Include="Assets\script\Results\ResultsController.cs" />

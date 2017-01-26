@@ -5,6 +5,9 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour {
 
+    [SerializeField]
+    GameLogic gameLogic;
+
     GameObject[] enemy;
     GameObject[] block;
     GameObject[] item;
@@ -26,7 +29,8 @@ public class PlayerController : MonoBehaviour {
     private const float BOOLD_PRESSURE_HALF = 50.0f;
     private const float HYPERTENSION = 70.0f;
     private const float ATTACK_CONSUME = 10.0f;
-
+    private Color damageColor;
+    private float damageCount;
 
 	private float distanceCheckX;
 	private float distanceCheckY;
@@ -64,15 +68,16 @@ public class PlayerController : MonoBehaviour {
     // アニメーター各ステートへの参照
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
     static int jump = Animator.StringToHash( "Base Layer.Jump" );
-    static int passive = Animator.StringToHash( "Base Layer.Passiveness" );
 
 	void Awake () {
+        gameLogic = GameObject.Find( "GameLogic" ).GetComponent<GameLogic>();
 		enemy = GameObject.FindGameObjectsWithTag ("Enemy");
 		boss = GameObject.Find ("Vodke");
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		animator = GetComponent<Animator> ();
 		rig2d = GetComponent<Rigidbody2D> ();
 		StatasInit ();
+        damageColor = new Color( 255, 0, 0, 255 );
 	}
 		
 
@@ -82,16 +87,21 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
-            SwipeAction();
-            Controller();
-            PlayerStatasUpDate();
-            ItemDecision();
+
+        if ( gameLogic.gameStatus != GameLogic.GAME_STATUS.Start ) {
+            return;
+        }
+
+        SwipeAction();
+        Controller();
+        PlayerStatasUpDate();
+        ItemDecision();
     }
 
     // プレイヤーコントローラ
     private void Controller( ) {
 
-        if ( isDead || currentBaseState.fullPathHash == passive ) {
+        if ( isDead || currentBaseState.fullPathHash == hashDamage ) {
             return;
         }
         
@@ -102,7 +112,7 @@ public class PlayerController : MonoBehaviour {
         // TouchController
 		//axis = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
 
-        if ( currentBaseState.fullPathHash != passive ) {
+        if ( currentBaseState.fullPathHash != hashDamage ) {
 
 		    //　キャラを移動させる
 		    if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
@@ -170,6 +180,7 @@ public class PlayerController : MonoBehaviour {
         /*if ( gameObject.transform.position.y <= -4 ) {
            isDead = true;
         }*/
+
     }
 
     // 攻撃判定
@@ -265,11 +276,12 @@ public class PlayerController : MonoBehaviour {
         if ( hypertension == true ) {
 		    staminaSlider.value -= damage;
         }
+        animator.SetTrigger( hashDamage ); 
+        
 	}
 
     // ダメージアニメション
     public void Passiveness( ) {
-
 		distanceCheckX = boss.transform.position.x - transform.position.x;
 		rig2d.velocity = new Vector2( distanceCheckX > 0 ? -4.0f : 4.0f, 2.0f );
     }
@@ -348,5 +360,12 @@ public class PlayerController : MonoBehaviour {
 		balloonController = GameObject.Find ("TextController");
 		balloonController.GetComponent<BalloonController> ().BalloonDestroy ();
 	}
+
+    public void DamageColor() {
+         GetComponent<SpriteRenderer>().color = new Color( 255, 0, 0, 255 );
+    }
 		
+    public void NormalColor() {
+         GetComponent<SpriteRenderer>().color = new Color( 255, 255, 255, 255 );
+    }
 }

@@ -39,7 +39,7 @@ public class EnemyController : MonoBehaviour {
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 	}
 
-	void Update() {
+	public void Controller() {
 
 		ActionController ();
 

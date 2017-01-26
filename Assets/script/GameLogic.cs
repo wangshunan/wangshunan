@@ -11,11 +11,12 @@ public class GameLogic : MonoBehaviour {
 
 	public enum GAME_STATUS {
 		Start,
+        Pause,
 		Clear,
 		Over
 	}; 
 
-	public int gameStatus;
+	public GAME_STATUS gameStatus;
 
 	void Awave() {
 		gameStatus = (int)GAME_STATUS.Start;
@@ -32,11 +33,11 @@ public class GameLogic : MonoBehaviour {
 	void GameStatusUpData( ) {
 		
 		if ( bossController.isDead ) {
-			gameStatus = (int)GAME_STATUS.Clear;
+			gameStatus = GAME_STATUS.Clear;
 		}
 
 		if ( playerController.isDead ) {
-			gameStatus = (int)GAME_STATUS.Over;
+			gameStatus = GAME_STATUS.Over;
 		}
 
 	}
