@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour {
     PauseSystem pause;
 
     private GameObject startPos;
+	private GameObject overPos;
     private GameObject underGroundPos;
 
     private GameObject m_target;
@@ -23,10 +24,11 @@ public class CameraController : MonoBehaviour {
     void Awake() {
         pause = GameObject.Find( "GameLogic" ).GetComponent<PauseSystem>();
         startPos = GameObject.Find( "StartPos" );
+		overPos = GameObject.Find ("OverPos");
         underGroundPos = GameObject.Find( "UnderGroundPos" );
         m_target = GameObject.Find( "Cguy" );
-        offSetPoint = transform.position.x - m_target.transform.position.x;
         transform.position = startPos.transform.position;
+		offSetPoint = transform.position.x - m_target.transform.position.x;
         fallPoint = ( startPos.transform.position.y - underGroundPos.transform.position.y ) / 2;
     }
 
@@ -42,16 +44,20 @@ public class CameraController : MonoBehaviour {
     }
 
     void HorizontalController() {
-         if ( m_target.transform.position.x > transform.position.x + offSetPoint ) {
-            var overPoint = m_target.transform.position.x;
-            var moveDistance = overPoint - startPoint;
-           
+		if ( m_target.transform.position.x > transform.position.x + offSetPoint ) {
+			float overPoint = m_target.transform.position.x;
+			float moveDistance = overPoint - startPoint;
+
+			if( transform.position.x - moveDistance >= overPos.transform.position.x ) {
+				return;
+			}
+				
             transform.position += new Vector3( moveDistance, 0, 0 );
         }
 
         if ( m_target.transform.position.x < transform.position.x - offSetPoint ) {
-            var overPoint = m_target.transform.position.x;
-            var moveDistance = Mathf.Abs( overPoint - startPoint );
+			float overPoint = m_target.transform.position.x;
+            float moveDistance = Mathf.Abs( overPoint - startPoint );
            
             if ( transform.position.x - moveDistance <= startPos.transform.position.x ) {
                 return;

@@ -16,13 +16,13 @@ public class ResultsManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		switch ( test ) {
-		case (int)GameLogic.GAME_STATUS.Start:
+		switch ( gamelogic.gameStatus ) {
+		case GameLogic.GAME_STATUS.Start:
 			break;
-		case (int)GameLogic.GAME_STATUS.Clear:
+		case GameLogic.GAME_STATUS.Clear:
 			resultsController.GameClear ();
 			break;
-		case (int)GameLogic.GAME_STATUS.Over:
+		case GameLogic.GAME_STATUS.Over:
 			resultsController.GameOver ();
 			break;
 		}

@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     GameLogic gameLogic;
 
+	[SerializeField]
+	BalloonController balloonController;
+
     GameObject[] enemy;
     GameObject[] block;
     GameObject[] item;
@@ -29,7 +32,8 @@ public class PlayerController : MonoBehaviour {
     private const float BOOLD_PRESSURE_HALF = 50.0f;
     private const float HYPERTENSION = 70.0f;
     private const float ATTACK_CONSUME = 10.0f;
-    private Color damageColor;
+
+	private Color damageColor = new Color( 255, 0, 0, 255 );
     private float damageCount;
 
 	private float distanceCheckX;
@@ -42,7 +46,6 @@ public class PlayerController : MonoBehaviour {
     private float healthSpeed;
 	private float hypertensionJumpPower;
 	private float healthJumpPower;
-	private GameObject balloonController;
 
 	//　タッチ操作
 	public float minSwipeDistY;
@@ -60,14 +63,15 @@ public class PlayerController : MonoBehaviour {
     static int hashSpeed = Animator.StringToHash ("Speed");
 	static int hashFallSpeed = Animator.StringToHash ("FallSpeed");
 	static int hashGroundDistance = Animator.StringToHash ("GroundDistance");
-	static int hashIsCrouch = Animator.StringToHash ("IsCrouch");
 	static int hashAttack = Animator.StringToHash ("Attack");
     static int hashDamage = Animator.StringToHash ("Damage");
-	static int hashIsDead = Animator.StringToHash ("IsDead");
+	static int hashDead = Animator.StringToHash("IsDead");
 
     // アニメーター各ステートへの参照
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
-    static int jump = Animator.StringToHash( "Base Layer.Jump" );
+    static int jump = Animator.StringToHash( "Base Layer.Jumping.Jumping" );
+	static int damage = Animator.StringToHash( "Base Layer.Damaged");
+	static int grounded = Animator.StringToHash( "Base Layer.Ground.Stand" );
 
 	void Awake () {
         gameLogic = GameObject.Find( "GameLogic" ).GetComponent<GameLogic>();
@@ -77,7 +81,6 @@ public class PlayerController : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 		rig2d = GetComponent<Rigidbody2D> ();
 		StatasInit ();
-        damageColor = new Color( 255, 0, 0, 255 );
 	}
 		
 
@@ -94,8 +97,8 @@ public class PlayerController : MonoBehaviour {
 
         SwipeAction();
         Controller();
-        PlayerStatasUpDate();
         ItemDecision();
+		PlayerStatasUpDate();
     }
 
     // プレイヤーコントローラ
@@ -107,19 +110,18 @@ public class PlayerController : MonoBehaviour {
         
         // keyBoardController
         axis = Input.GetAxisRaw ("Horizontal");
-        Debug.Log( axis );
         
         // TouchController
 		//axis = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
 
-        if ( currentBaseState.fullPathHash != hashDamage ) {
+		if ( currentBaseState.fullPathHash != damage ) {
 
 		    //　キャラを移動させる
 		    if ( axis != 0 && currentBaseState.fullPathHash != attack ) {
 			   rig2d.transform.position += new Vector3( axis * speed, 0, 0 );
             }
 
-            if ( currentBaseState.fullPathHash != attack ) {
+			if ( currentBaseState.fullPathHash != attack && currentBaseState.fullPathHash == grounded ) {
 		        // 攻撃
 		        if ( Input.GetKeyDown( KeyCode.Z ) ) {
 			        if ( staminaSlider.value > ATTACK_CONSUME ) {
@@ -129,9 +131,9 @@ public class PlayerController : MonoBehaviour {
 			        }
 		        }
 
-		        if ( Input.GetButtonDown ("Jump") ) {
+				if ( Input.GetButtonDown ("Jump") ) {
 				    rig2d.velocity = new Vector2( rig2d.velocity.x, jumpPower );
-				  
+			  
 		        }
             }
         }
@@ -145,7 +147,7 @@ public class PlayerController : MonoBehaviour {
         // 現在ANIMATOR状態を取得
         currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
         var distanceFromGround = Physics2D.Raycast (transform.position, Vector3.down, 10, groundMask);
-        Debug.DrawRay(transform.position, distanceFromGround.point - new Vector2( transform.position.x, transform.position.y ), Color.blue, 3, true);
+        //Debug.DrawRay(transform.position, distanceFromGround.point - new Vector2( transform.position.x, transform.position.y ), Color.blue, 3, true);
         if ( !isDead ) {
             staminaSlider.value += 2 * Time.deltaTime;
         }
@@ -171,9 +173,9 @@ public class PlayerController : MonoBehaviour {
 			StatasInit();
 		}
 
-        if ( booldPressureSlider.value == BOOLD_PRESSURE_MAX ) {
-				animator.SetTrigger ("Dead");
-                isDead = true;
+        if ( booldPressureSlider.value >= BOOLD_PRESSURE_MAX ) {
+			animator.SetBool (hashDead, true);
+			isDead = true;
 		}
 
         // 落下死亡判定
@@ -272,6 +274,9 @@ public class PlayerController : MonoBehaviour {
 
     // 受けるダメージ
 	public void Damage( float damage ) {
+		if (isDead) {
+			return;
+		}
 		booldPressureSlider.value += damage;
         if ( hypertension == true ) {
 		    staminaSlider.value -= damage;
@@ -356,11 +361,6 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-    void BallonDestroy() {
-		balloonController = GameObject.Find ("TextController");
-		balloonController.GetComponent<BalloonController> ().BalloonDestroy ();
-	}
-
     public void DamageColor() {
          GetComponent<SpriteRenderer>().color = new Color( 255, 0, 0, 255 );
     }
@@ -368,4 +368,7 @@ public class PlayerController : MonoBehaviour {
     public void NormalColor() {
          GetComponent<SpriteRenderer>().color = new Color( 255, 255, 255, 255 );
     }
+	public void Dead() {
+		gameLogic.gameStatus = GameLogic.GAME_STATUS.Over;
+	}
 }

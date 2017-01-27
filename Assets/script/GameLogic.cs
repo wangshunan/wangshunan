@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour {
 
-	[SerializeField] PlayerController playerController;
-	[SerializeField] BossController bossController;
+	[SerializeField] 
+	PlayerController playerController;
 
+	[SerializeField] 
+	BossController bossController;
 
 	public enum GAME_STATUS {
 		Start,
@@ -20,24 +22,22 @@ public class GameLogic : MonoBehaviour {
 
 	void Awave() {
 		gameStatus = (int)GAME_STATUS.Start;
-	}
-
-	void Start() {
+		playerController = GameObject.Find ("Cguy").GetComponent<PlayerController> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//GameStatusUpData ();
+		GameStatusUpData ();
 	}
 
 	void GameStatusUpData( ) {
 		
-		if ( bossController.isDead ) {
+		/*if ( 1 ) {
 			gameStatus = GAME_STATUS.Clear;
-		}
+		}*/
 
 		if ( playerController.isDead ) {
-			gameStatus = GAME_STATUS.Over;
+			//gameStatus = GAME_STATUS.Over;
 		}
 
 	}
