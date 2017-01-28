@@ -11,6 +11,9 @@ public class ResultsController : MonoBehaviour {
     [SerializeField]
     PauseSystem pause;
 
+    [SerializeField]
+    TimeOverEvent timeOverEvent;
+
 	const float MAX_HP = 100;
 	const float HALF_HP = 50;
 	const float MIN_HP = 0;
@@ -20,6 +23,7 @@ public class ResultsController : MonoBehaviour {
 	public GameObject retry;
 	public GameObject title;
 	public GameObject moveControllerPanel;
+    public GameObject timeOver;
     private GameObject continuePanel;
     private GameObject balloonStatus;
 
@@ -39,6 +43,7 @@ public class ResultsController : MonoBehaviour {
 		balloonStatus = GameObject.Find ("TextController");
         resultsManager.GetComponent<ResultsManager>();
         pause = GameObject.Find( "GameLogic" ).GetComponent<PauseSystem>();
+        timeOverEvent = GameObject.Find( "Image" ).GetComponent<TimeOverEvent>( );
 	}
 
 	// Use this for initialization
@@ -62,7 +67,7 @@ public class ResultsController : MonoBehaviour {
             continuePanel.GetComponent<Image>().color = new Color( 255, 255, 255, alpha );
 		}
 
-		if ( alpha > 0.6f && clearImage.transform.position.y > Screen.height * 0.7f ) {
+        if ( alpha > 0.6f && clearImage.transform.position.y > Screen.height * 0.7f && timeOverEvent.eventOver ) {
             clearImage.SetActive( true );
 			//balloonStatus.GetComponent<BalloonController> ().BalloonDestroy ();
 			clearImage.transform.position -= new Vector3 ( 0, 2, 0 );
@@ -82,6 +87,7 @@ public class ResultsController : MonoBehaviour {
 		}
 
 		if ( alpha > 0.6f && overImage.transform.position.y > Screen.height * 0.7f ) {
+            timeOver.SetActive( false );
             overImage.SetActive( true );
 			bossHp.SetActive (false);
 			playerHp.SetActive (false);

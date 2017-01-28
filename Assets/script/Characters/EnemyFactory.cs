@@ -16,7 +16,7 @@ public class EnemyFactory : MonoBehaviour {
 	private bool enemyApper;
 	private float eventPoint;
 	private float timeCount = 0;
-	private float enemyCount = 0;
+	private static float enemyCount = 0;
 	private GameObject target;
 
 	void Awake() {
@@ -30,13 +30,10 @@ public class EnemyFactory : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-		if (enemyCount >= ENEMY_MAX) {
+        if (enemyCount >= ENEMY_MAX || gamelogic.gameStatus != GameLogic.GAME_STATUS.Start) {
 			return;
 		}
 		
-		if ( target.transform.position.x >= enemyApperPoint.transform.position.x + eventPoint ) {
-			enemyApper = true;
-		}
 
 		if( enemyApper ) {
 			timeCount += Time.deltaTime;
@@ -61,4 +58,13 @@ public class EnemyFactory : MonoBehaviour {
 				
 		}
 	}
+
+    void OnTriggerEnter2D(Collider2D coll) {
+
+        if ( coll.gameObject.tag == "Player" ) {
+            enemyApper = true;
+        }
+
+        Destroy( GetComponent<BoxCollider2D>( ) );
+    }
 }

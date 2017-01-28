@@ -44,7 +44,7 @@ public class CameraController : MonoBehaviour {
     }
 
     void HorizontalController() {
-		if ( m_target.transform.position.x > transform.position.x + offSetPoint ) {
+		if ( m_target.transform.position.x > transform.position.x ) {
 			float overPoint = m_target.transform.position.x;
 			float moveDistance = overPoint - startPoint;
 
