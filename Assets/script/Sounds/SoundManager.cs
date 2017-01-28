@@ -4,15 +4,23 @@ using System.Collections;
 
 public class SoundManager : MonoBehaviour {
 	public enum BGM_LIST{
-		MENU,
-		ZAKO
+		Vodke_1,
+		Vodke_2,
+		Vodke_3,
+		GameOver,
+		GameClear,
+		Senario_1,
+		Senario_2,
+		Senario_3,
+		StageSeclet,
+		TilteMenu,
+		Result,
+		Record,
 	}
 	public enum SE_LIST {
-		BACK,
-		BUTTON,
-		GAME_START,
-		PUNCH,
-		BLOCK
+		ButtonGo,
+		ButtonDecide,
+		Back,
 	}
 	public enum VOICE_LIST {
 		NONE,
@@ -59,16 +67,17 @@ public class SoundManager : MonoBehaviour {
 			return instance;
 		}
 	}
-
-	public const int maxSeSources = 5;
+	public const int maxBgmSources = 12;
+	public const int maxSeSources = 3;
 	public const int maxVoiceSources = 27;
 	// === AudioSource ===
 	// BGM
-	private AudioSource BGMsource;
+	public AudioSource BGMsource;
 	// SE
-	private AudioSource SEsources;
+	public AudioSource SEsources;
 	// 音声
-	private AudioSource VoiceSources;
+	public AudioSource VoiceSources;
+
 	// === AudioClip ===
 	// BGM
 	public AudioClip[ ] BGM;
@@ -76,11 +85,12 @@ public class SoundManager : MonoBehaviour {
 	public AudioClip[ ] SE;
 	// 音声
 	public AudioClip[ ] Voice;
- 
+ 	//音量
+
 
 
 	void Awake( ){
-		DontDestroyOnLoad( transform.gameObject );
+		//DontDestroyOnLoad( transform.gameObject );
 		GameObject[ ] obj = GameObject.FindGameObjectsWithTag( "SoundManager" );
 		if( obj.Length > 1 ){
 			// 既に存在しているなら削除
@@ -102,6 +112,7 @@ public class SoundManager : MonoBehaviour {
 
 		// 音声 AudioSource
 		VoiceSources = gameObject.AddComponent<AudioSource>( );
+
 	}
 		
 	// ***** BGM再生 *****
@@ -111,10 +122,10 @@ public class SoundManager : MonoBehaviour {
 			return;
 		}
 		// 同じBGMの場合は何もしない
-		if( BGMsource.clip == BGM[ index ] ){
+		/*if( BGMsource.clip == BGM[ index ] ){
 			return;
-		}
-		BGMsource.Stop( );
+		}*/
+		//BGMsource.Stop( );
 		BGMsource.clip = BGM[ index ];
 		BGMsource.Play( );
 	}
@@ -132,9 +143,9 @@ public class SoundManager : MonoBehaviour {
 			return;
 		}
 		
-		if( SEsources.clip == SE[ index ] ){
+		/*if( SEsources.clip == SE[ index ] ){
 			return;
-		}
+		}*/
 		SEsources.clip = SE[ index ];
 		SEsources.Play( );
 	}
@@ -162,7 +173,6 @@ public class SoundManager : MonoBehaviour {
 		VoiceSources.Stop( );
 		VoiceSources.clip = null;
 	}
-
 
 
 }

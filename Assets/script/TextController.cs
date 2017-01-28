@@ -6,10 +6,7 @@ using UnityEngine.SceneManagement;
 public class TextController : MonoBehaviour {
 
     [SerializeField] GameObject moveController;
-	public static TextController Instance {
-		set;
-		get;
-	}
+
 	public GameObject StartButton;
 	public GameObject vodke;
 	public GameObject SkipButton;
@@ -36,20 +33,28 @@ public class TextController : MonoBehaviour {
 	public bool IsCompleteDisplayText {
 		get{ return Time.time > timeElapsed + timeUntilDisplay;}	
 	}
-    
+	void Awake( ) { 
+		
+	}
 	void Start( ) {
         vodke = GameObject.Find( "Vodke" );
 		SkipButton = GameObject.Find ( "SkipButton" );
         
 		if ( SceneManager.GetSceneByName( "Talking" ).isLoaded ) {
+			
             SoundManager.Instance.PlayVoice ( (int)SoundManager.VOICE_LIST.DIALOG_1 );
+			SoundManager.Instance.PlayBGM ((int)SoundManager.BGM_LIST.Senario_1);
 	        SetNextLine( 0 );
         } else if ( SceneManager.GetSceneByName( "TalkingZako" ).isLoaded ) {
+			
             SoundManager.Instance.PlayVoice ( (int)SoundManager.VOICE_LIST.DIALOG_16 );
+			SoundManager.Instance.PlayBGM ((int)SoundManager.BGM_LIST.Senario_2);
             screenCount = 16;
 	        SetNextLine( 0 );
         } else if ( SceneManager.GetSceneByName( "TalkingBoss" ).isLoaded ) {
+			
             SoundManager.Instance.PlayVoice ( (int)SoundManager.VOICE_LIST.DIALOG_22 );
+			SoundManager.Instance.PlayBGM ((int)SoundManager.BGM_LIST.Senario_3);
             screenCount = 22;
 	        SetNextLine( 0 );
         }
@@ -64,6 +69,7 @@ public class TextController : MonoBehaviour {
 				
 				SetNextLine( 0 );
                 screenCount++;
+				SoundManager.Instance.PlaySE ((int)SoundManager.SE_LIST.ButtonDecide);
 				SoundManager.Instance.PlayVoice(screenCount);
 			}
 			/*if (screenCount >= 11) {
@@ -111,6 +117,7 @@ public class TextController : MonoBehaviour {
 		StartButton.SetActive (true);
 		SkipButton.SetActive (false);
         SoundManager.Instance.StopVoice( );
+		SoundManager.Instance.PlaySE ((int)SoundManager.SE_LIST.ButtonDecide);
 	}
 	public void LoadSceneBattle() {
 		Application.LoadLevel("tutorial");
@@ -120,6 +127,7 @@ public class TextController : MonoBehaviour {
 		Invoke ("LoadSceneBattle", 1);
 		currentText = scenarios [15];
         SoundManager.Instance.StopVoice( );
+		SoundManager.Instance.PlaySE ((int)SoundManager.SE_LIST.ButtonDecide);
 	}
 	public void StartButtonAlive( ) {
 		StartButton.SetActive (true);
@@ -128,11 +136,13 @@ public class TextController : MonoBehaviour {
     public void BossStageButtonClicked() {
         SceneManager.LoadScene( "TalkingBoss" );
         SoundManager.Instance.StopVoice( );
+		SoundManager.Instance.PlaySE ((int)SoundManager.SE_LIST.ButtonDecide);
     }
 
     public void tsetButtonClicked() {
        moveController.SetActive( true );
        moveController.GetComponent<MoveController>().movePlay(); 
-        SoundManager.Instance.StopVoice( );
+       SoundManager.Instance.StopVoice( );
+	   SoundManager.Instance.PlaySE ((int)SoundManager.SE_LIST.ButtonDecide);
     }
 }
