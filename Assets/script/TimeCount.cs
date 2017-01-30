@@ -4,8 +4,11 @@ using UnityEngine.UI;
 
 public class TimeCount : MonoBehaviour {
     
-    [SerializeField]Text minute;
-    [SerializeField]Text second;
+    [SerializeField]
+    Text minute;
+
+    [SerializeField]
+    Text second;
 
     private const int SECOND_MAX = 60;
     private const int SECOND_MIN = 0;
@@ -21,7 +24,7 @@ public class TimeCount : MonoBehaviour {
         minute = GameObject.Find( "Minute" ).GetComponent<Text>();
         second = GameObject.Find( "Second" ).GetComponent<Text>();
         minuteNow = 0.0f;
-        secondNow = 0.0f;
+        secondNow = 2.0f;
     }
 	
 	// Update is called once per frame

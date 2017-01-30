@@ -12,11 +12,12 @@ public class PauseSystem : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 	    gameLogic = GameObject.Find( "GameLogic" ).GetComponent<GameLogic>();
+        GamePause();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void FixedUpdate () {
+
 	}
 
     public void GamePause() {

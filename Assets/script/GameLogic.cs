@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour {
-
-	[SerializeField] 
-	PlayerController playerController;
-
-	[SerializeField] 
-	BossController bossController;
+    
+    [SerializeField]
+    public FadeManager fadeController;
+    
+    [SerializeField]
+    public PauseSystem pause;
 
 	public enum GAME_STATUS {
 		Start,
@@ -21,8 +20,9 @@ public class GameLogic : MonoBehaviour {
 	public GAME_STATUS gameStatus;
 
 	void Awave() {
-		gameStatus = (int)GAME_STATUS.Start;
-		playerController = GameObject.Find ("Cguy").GetComponent<PlayerController> ();
+		gameStatus = GAME_STATUS.Pause;
+        fadeController = GameObject.Find("FadeEvent").GetComponent<FadeManager>();
+        pause = GameObject.Find("GameLogic").GetComponent<PauseSystem>();
 	}
 	
 	// Update is called once per frame
@@ -31,14 +31,6 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	void GameStatusUpData( ) {
-		
-		/*if ( 1 ) {
-			gameStatus = GAME_STATUS.Clear;
-		}*/
-
-		if ( playerController.isDead ) {
-			//gameStatus = GAME_STATUS.Over;
-		}
 
 	}
 		

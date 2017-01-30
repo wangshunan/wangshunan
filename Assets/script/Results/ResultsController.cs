@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class ResultsController : MonoBehaviour {
 
     [SerializeField]
-    ResultsManager resultsManager;
+    GameLogic gameLogic;
 
     [SerializeField]
     PauseSystem pause;
@@ -14,12 +14,14 @@ public class ResultsController : MonoBehaviour {
     [SerializeField]
     TimeOverEvent timeOverEvent;
 
+    [SerializeField]
+    FadeManager fadeController;
+
 	const float MAX_HP = 100;
 	const float HALF_HP = 50;
 	const float MIN_HP = 0;
 
 	float alpha = 0.0f;
-	private int Color;
 	public GameObject retry;
 	public GameObject title;
 	public GameObject moveControllerPanel;
@@ -31,8 +33,6 @@ public class ResultsController : MonoBehaviour {
 	public GameObject playerHp;
 	public GameObject stamina;
 
-	private GameObject boss;
-	private GameObject enemy;
 	public GameObject clearImage;
 	public GameObject overImage;
     public GameObject continueImage;
@@ -41,10 +41,11 @@ public class ResultsController : MonoBehaviour {
 	void Awake( ) {
         continuePanel = GameObject.Find("Continue");
 		balloonStatus = GameObject.Find ("TextController");
-        resultsManager.GetComponent<ResultsManager>();
+        gameLogic = GameObject.Find("GameLogic").GetComponent<GameLogic>();
         pause = GameObject.Find( "GameLogic" ).GetComponent<PauseSystem>();
-        timeOverEvent = GameObject.Find( "Image" ).GetComponent<TimeOverEvent>( );
-	}
+        timeOverEvent = GameObject.Find( "TimeOverEvnet" ).GetComponent<TimeOverEvent>();
+        fadeController = GameObject.Find( "FadeEvent" ).GetComponent<FadeManager>();
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -67,14 +68,14 @@ public class ResultsController : MonoBehaviour {
             continuePanel.GetComponent<Image>().color = new Color( 255, 255, 255, alpha );
 		}
 
-        if ( alpha > 0.6f && clearImage.transform.position.y > Screen.height * 0.7f && timeOverEvent.eventOver ) {
+        if ( alpha > 0.6f && clearImage.transform.position.y > Screen.height * 0.5f ) {
             clearImage.SetActive( true );
-			//balloonStatus.GetComponent<BalloonController> ().BalloonDestroy ();
 			clearImage.transform.position -= new Vector3 ( 0, 2, 0 );
 		}
 
-		if ( clearImage.transform.position.y <= Screen.height * 0.7f ) {
-            SceneManager.LoadScene( "TalkingZako" );
+		if ( clearImage.transform.position.y <= Screen.height * 0.5f ) {
+            fadeController.sceneName = "TalkingZako";
+            fadeController.fadeOutOver = true;
 		}
 	}
 
@@ -86,8 +87,11 @@ public class ResultsController : MonoBehaviour {
             continuePanel.GetComponent<Image>().color = new Color( 255, 255, 255, alpha );
 		}
 
+        if ( timeOverEvent.eventOver ) {
+            return;
+        }
+
 		if ( alpha > 0.6f && overImage.transform.position.y > Screen.height * 0.7f ) {
-            timeOver.SetActive( false );
             overImage.SetActive( true );
 			bossHp.SetActive (false);
 			playerHp.SetActive (false);
@@ -104,20 +108,22 @@ public class ResultsController : MonoBehaviour {
 	}
 
 	public void OnRetryButtonClicked() {
-		SceneManager.LoadScene ("Battle");
+		fadeController.sceneName = "Battle";
+        fadeController.fadeOutOver = true;
 	}
 
 	public void OnOverButtonClicked() {
-		SceneManager.LoadScene ("TitleMenu");
+		fadeController.sceneName = "TitleMenu";
+        fadeController.fadeOutOver = true;
 	}
 
     public void OnLoseButton( ) {
-        resultsManager.test = (int)GameLogic.GAME_STATUS.Over;
+        gameLogic.gameStatus = GameLogic.GAME_STATUS.Over;
     }
 
 
     public void OnClearButton( ) {
-        resultsManager.test = (int)GameLogic.GAME_STATUS.Clear;
+        gameLogic.gameStatus = GameLogic.GAME_STATUS.Clear;
     }
 
 }

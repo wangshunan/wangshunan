@@ -263,9 +263,9 @@ public class PlayerController : MonoBehaviour {
 
     // プレイヤーステータス初期化
 	private void StatasInit( ) {
-		hypertensionSpeed = 1.0f;
+		hypertensionSpeed = 0.05f;
 		healthSpeed = 0.1f;
-		hypertensionJumpPower = 3.5f;
+		hypertensionJumpPower = 8f;
 		healthJumpPower = 12.0f;
 		speed = healthSpeed;
 		jumpPower = healthJumpPower;

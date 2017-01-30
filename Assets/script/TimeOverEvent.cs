@@ -38,13 +38,15 @@ public class TimeOverEvent : MonoBehaviour {
         }
 
         if ( isScale ) {
-            transform.localScale = Vector3.MoveTowards( transform.localScale, targetTrans.localScale, speed * Time.deltaTime );
-            gameLogic.gameStatus = GameLogic.GAME_STATUS.Over;
-        } else {
-            isScale = false;
-        }
-        if ( transform.localScale == maxScale ) {
             eventOver = true;
+            gameLogic.gameStatus = GameLogic.GAME_STATUS.Over;
+            transform.localScale = Vector3.MoveTowards( transform.localScale, targetTrans.localScale, speed * Time.deltaTime );
+        }
+
+        if ( transform.localScale == maxScale ) {
+            eventOver = false;
+            isScale = false;
+            gameObject.SetActive( false );
         }
     }
 }
