@@ -62,10 +62,7 @@ public class TitleController : MonoBehaviour {
 		else if( ButtonName == ( int )BUTTON_LIST.CREDIT ) {
 			
             MenuPanel.SetActive( false );
-            MovieController.SetActive( true );
-            movieController.movePlay();
-
-
+			Application.LoadLevel ("Title");
         }
         else if( ButtonName == ( int )BUTTON_LIST.EXIT ) {
 			

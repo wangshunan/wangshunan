@@ -108,11 +108,11 @@ public class PlayerController : MonoBehaviour {
             return;
         }
         
-        // keyBoardController
-        axis = Input.GetAxisRaw ("Horizontal");
+        //keyBoardController
+        //axis = Input.GetAxisRaw ("Horizontal");
         
-        // TouchController
-		//axis = CrossPlatformInputManager.GetAxisRaw ( "Horizontal" );
+        // TouchController	
+		axis = CrossPlatformInputManager.GetAxis ( "Horizontal" );
 
 		if ( currentBaseState.fullPathHash != damage ) {
 
@@ -263,7 +263,7 @@ public class PlayerController : MonoBehaviour {
 
     // プレイヤーステータス初期化
 	private void StatasInit( ) {
-		hypertensionSpeed = 0.05f;
+		hypertensionSpeed = 0.08f;
 		healthSpeed = 0.1f;
 		hypertensionJumpPower = 8f;
 		healthJumpPower = 12.0f;

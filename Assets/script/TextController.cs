@@ -140,9 +140,8 @@ public class TextController : MonoBehaviour {
     }
 
     public void tsetButtonClicked() {
-       moveController.SetActive( true );
-       moveController.GetComponent<MoveController>().movePlay(); 
-       SoundManager.Instance.StopVoice( );
-	   SoundManager.Instance.PlaySE ((int)SoundManager.SE_LIST.ButtonDecide);
+        SoundManager.Instance.StopVoice( );
+	    SoundManager.Instance.PlaySE ((int)SoundManager.SE_LIST.ButtonDecide);
+		SceneManager.LoadScene( "Title" );
     }
 }

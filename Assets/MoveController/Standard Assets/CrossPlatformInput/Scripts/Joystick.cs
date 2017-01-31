@@ -14,6 +14,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 			OnlyVertical // Only vertical
 		}
 
+		public float touchMoveSpeedModulus = 1000f;
 		public int MovementRange = 100;
 		public AxisOption axesToUse = AxisOption.Both; // The options for the axes that the still will use
 		public string horizontalAxisName = "Horizontal"; // The name given to the horizontal axis for the cross platform input
@@ -79,7 +80,12 @@ namespace UnityStandardAssets.CrossPlatformInput
 			{
 				int delta = (int)(data.position.x - m_StartPos.x);
 				//delta = Mathf.Clamp(delta, - MovementRange, MovementRange);
-				newPos.x = delta;
+				if ( delta >= 0 ) {
+					newPos.x = touchMoveSpeedModulus;
+				}
+				if ( delta < 0 ) {
+					newPos.x = -touchMoveSpeedModulus;
+				}
 			}
 
 			if (m_UseY)

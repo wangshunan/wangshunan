@@ -23,8 +23,8 @@ public class TimeCount : MonoBehaviour {
         timeOver = false;
         minute = GameObject.Find( "Minute" ).GetComponent<Text>();
         second = GameObject.Find( "Second" ).GetComponent<Text>();
-        minuteNow = 0.0f;
-        secondNow = 2.0f;
+        minuteNow = 3.0f;
+        secondNow = 0.0f;
     }
 	
 	// Update is called once per frame
