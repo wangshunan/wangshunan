@@ -31,7 +31,6 @@ public class EnemyFactory : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(count);
         if (gamelogic.gameStatus != GameLogic.GAME_STATUS.Start) {
 			return;
 		}

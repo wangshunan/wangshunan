@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour {
 	private const float PASSIVE_X = 3.0f;
 	private const float PASSIVE_Y = 2.0f;
 	private float timeCount = 0.0f;
-    public int eventEnemyCount;
+    private float eventEnemyCount;
 
 	bool isGround = false;
 
@@ -52,7 +52,12 @@ public class EnemyController : MonoBehaviour {
 			return;
 		}
 		ActionController ();
-        Debug.Log(eventEnemyCount);
+
+        if ( gameObject.layer == 14 ) {
+            if ( target.transform.position.x - gameObject.transform.position.x > 25 ) {
+                Destroy( gameObject );
+            }
+        }
 	}
 
 	private void ActionController() {

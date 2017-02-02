@@ -15,10 +15,6 @@ public class PauseSystem : MonoBehaviour {
         GamePause();
 	}
 	
-	// Update is called once per frame
-	void FixedUpdate () {
-
-	}
 
     public void GamePause() {
 
