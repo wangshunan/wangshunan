@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{DF64DC2E-B4A0-B850-91DD-31EB4923EAAC}") = "未命名文件夹", "Assembly-CSharp.csproj", "{1C05986A-3A63-AD6F-2BBE-42C0A3AE1C6C}"
+EndProject
+Project("{DF64DC2E-B4A0-B850-91DD-31EB4923EAAC}") = "未命名文件夹", "Assembly-CSharp-Editor.csproj", "{BCAF35AD-8399-6DA9-57DC-7E7CCB9E9913}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C05986A-3A63-AD6F-2BBE-42C0A3AE1C6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C05986A-3A63-AD6F-2BBE-42C0A3AE1C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C05986A-3A63-AD6F-2BBE-42C0A3AE1C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C05986A-3A63-AD6F-2BBE-42C0A3AE1C6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCAF35AD-8399-6DA9-57DC-7E7CCB9E9913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCAF35AD-8399-6DA9-57DC-7E7CCB9E9913}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCAF35AD-8399-6DA9-57DC-7E7CCB9E9913}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCAF35AD-8399-6DA9-57DC-7E7CCB9E9913}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

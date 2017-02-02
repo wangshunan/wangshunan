@@ -26,7 +26,7 @@ public class StageClearEvent : MonoBehaviour {
 
         if ( coll.gameObject.tag == ("Player") ) {
             gameLogic.gameStatus = GameLogic.GAME_STATUS.Clear;
+			Destroy( gameObject.GetComponent<BoxCollider2D>() );
         }
-        Destroy( gameObject.GetComponent<BoxCollider2D>() );
     }
 }

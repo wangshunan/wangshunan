@@ -24,7 +24,7 @@ public class EnemyController : MonoBehaviour {
 	private float distanceCheck;
 	float moveSpeed = 1.0f;
 	private const float HIT_DISTANCE = 1.5f;
-    private  const float FIND_DISTANCE = 9.0f;
+    private  const float FIND_DISTANCE = 10.0f;
 	private const int SECOND = 60;
 	private const float PASSIVE_X = 3.0f;
 	private const float PASSIVE_Y = 2.0f;
@@ -53,11 +53,11 @@ public class EnemyController : MonoBehaviour {
 		}
 		ActionController ();
 
-        if ( gameObject.layer == 14 ) {
+        /*if ( gameObject.layer == 14 ) {
             if ( target.transform.position.x - gameObject.transform.position.x > 25 ) {
                 Destroy( gameObject );
             }
-        }
+        }*/
 	}
 
 	private void ActionController() {

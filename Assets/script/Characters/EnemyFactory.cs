@@ -17,7 +17,7 @@ public class EnemyFactory : MonoBehaviour {
 	private bool enemyApper;
 	private float eventPoint;
 	private float timeCount = 0;
-	private static float enemyCount = 0;
+	private float enemyCount = 0;
     public int count;
 	private GameObject target;
 
