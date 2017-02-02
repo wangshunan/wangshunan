@@ -35,8 +35,8 @@ public class CameraController : MonoBehaviour {
     void Update() {
         startPoint = m_target.transform.position.x;
     }
-
-    void LateUpdate () {
+    
+    void LateUpdate() {
         HorizontalController();
         VerticalController();
         FallEvent();
@@ -47,15 +47,14 @@ public class CameraController : MonoBehaviour {
 		if ( m_target.transform.position.x > transform.position.x ) {
 			float overPoint = m_target.transform.position.x;
 			float moveDistance = overPoint - startPoint;
-
 			if( transform.position.x - moveDistance >= overPos.transform.position.x ) {
 				return;
 			}
 				
-            transform.position += new Vector3( moveDistance, 0, 0 );
+            transform.position = new Vector3( m_target.transform.position.x, transform.position.y, transform.position.z );
         }
 
-        if ( m_target.transform.position.x < transform.position.x - offSetPoint ) {
+        if ( m_target.transform.position.x < transform.position.x ) {
 			float overPoint = m_target.transform.position.x;
             float moveDistance = Mathf.Abs( overPoint - startPoint );
            
@@ -63,7 +62,7 @@ public class CameraController : MonoBehaviour {
                 return;
             }
 
-            transform.position -= new Vector3( moveDistance, 0, 0 );
+            transform.position = new Vector3( m_target.transform.position.x, transform.position.y, transform.position.z );
         }
     }
 

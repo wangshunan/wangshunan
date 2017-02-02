@@ -134,7 +134,7 @@ public class TextController : MonoBehaviour {
 	}
     
     public void BossStageButtonClicked() {
-        SceneManager.LoadScene( "TalkingBoss" );
+        SceneManager.LoadScene( "BossStage" );
         SoundManager.Instance.StopVoice( );
 		SoundManager.Instance.PlaySE ((int)SoundManager.SE_LIST.ButtonDecide);
     }

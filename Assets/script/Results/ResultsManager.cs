@@ -6,9 +6,6 @@ public class ResultsManager : MonoBehaviour {
 	[SerializeField] ResultsController resultsController;
 	[SerializeField] GameLogic gamelogic;
 
-    public int test;
-
-
 	// Use this for initialization
 	void Start () {
 	    

@@ -8,15 +8,17 @@ public class EnemyFactory : MonoBehaviour {
 
 	GameObject enemyApperPoint;
 	GameObject enemyApperPoint2;
+    GameObject[] enemys;
+    public GameObject capsules;
 	public GameObject enemy;
-
-	private const float ENEMY_MAX = 50;
-
+    
+	private const float ENEMY_MAX = 20;
 	private bool apperController = true;
 	private bool enemyApper;
 	private float eventPoint;
 	private float timeCount = 0;
 	private static float enemyCount = 0;
+    public int count;
 	private GameObject target;
 
 	void Awake() {
@@ -29,20 +31,23 @@ public class EnemyFactory : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-        if (enemyCount >= ENEMY_MAX || gamelogic.gameStatus != GameLogic.GAME_STATUS.Start) {
+        Debug.Log(count);
+        if (gamelogic.gameStatus != GameLogic.GAME_STATUS.Start) {
 			return;
 		}
+
+        if ( enemyCount >= ENEMY_MAX ) {
+            enemyApper = false;
+        }
 		
 
 		if( enemyApper ) {
 			timeCount += Time.deltaTime;
-
-			Debug.Log ((int)timeCount % 2);
 			switch ((int)timeCount % 2) {
 			case 0:
 				if (apperController) {
 					Instantiate (enemy, enemyApperPoint.transform.position, Quaternion.identity);
+                    enemy.gameObject.layer = 14;
 					apperController = false;
 					enemyCount++;
 				}
@@ -50,13 +55,19 @@ public class EnemyFactory : MonoBehaviour {
 			case 1:
 				if (!apperController) {
 					Instantiate (enemy, enemyApperPoint2.transform.position, Quaternion.identity);
+                    enemy.gameObject.layer = 14;
 					apperController = true;
 					enemyCount++;
 				}
 				break;
-			}
-				
+			}			
 		}
+
+        if ( count == ENEMY_MAX ) {
+            Instantiate (capsules, transform.position, Quaternion.identity);
+            count = 0;
+        }
+
 	}
 
     void OnTriggerEnter2D(Collider2D coll) {

@@ -25,8 +25,6 @@ public class FadeManager: MonoBehaviour {
         gameLogic = GameObject.Find( "GameLogic" ).GetComponent<GameLogic>();
         fadeController = GameObject.Find( "FadeController" );
         fadeColor = new Color( 0, 0, 0, 255 );
-        fadeController.GetComponent<Image>().fillAmount = 1.0f;
-        fadeController.GetComponent<Image>().color = fadeColor;
 	}
 	
 	// Update is called once per frame
@@ -39,7 +37,6 @@ public class FadeManager: MonoBehaviour {
         if ( !fadeInOver ) {
             return;
         }
-
         if ( fadeController.GetComponent<Image>().fillAmount > 0 ) {
             fadeController.GetComponent<Image>().fillAmount -= 0.02f;
         }

@@ -8,14 +8,15 @@ public class PlayerController : MonoBehaviour {
     [SerializeField]
     GameLogic gameLogic;
 
-	[SerializeField]
-	BalloonController balloonController;
+    [SerializeField]
+    ItemButtonController itemController;
 
     GameObject[] enemy;
     GameObject[] block;
     GameObject[] item;
     GameObject boss;
-    public GameObject TextController;
+
+    public GameObject fallOverPoint;
 
     private float speed;
     private float jumpPower;
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour {
 	public Slider bossHp;
 	public bool isDead = false;
 
-    private const float HITDIRETION = 1.1f;
+    private const float HITDIRETION = 2f;
     private const float STAMINA_CONSUME = 10.0f;
     private const float BOOLD_PRESSURE_MAX = 100.0f;
     private const float BOOLD_PRESSURE_HALF = 50.0f;
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour {
 	static int grounded = Animator.StringToHash( "Base Layer.Ground.Stand" );
 
 	void Awake () {
+        itemController = GameObject.Find( "GameLogic" ).GetComponent<ItemButtonController>();
         gameLogic = GameObject.Find( "GameLogic" ).GetComponent<GameLogic>();
 		enemy = GameObject.FindGameObjectsWithTag ("Enemy");
 		boss = GameObject.Find ("Vodke");
@@ -97,7 +99,6 @@ public class PlayerController : MonoBehaviour {
 
         SwipeAction();
         Controller();
-        ItemDecision();
 		PlayerStatasUpDate();
     }
 
@@ -109,10 +110,10 @@ public class PlayerController : MonoBehaviour {
         }
         
         //keyBoardController
-        //axis = Input.GetAxisRaw ("Horizontal");
+        axis = Input.GetAxisRaw ("Horizontal");
         
         // TouchController	
-		axis = CrossPlatformInputManager.GetAxis ( "Horizontal" );
+		//axis = CrossPlatformInputManager.GetAxis ( "Horizontal" );
 
 		if ( currentBaseState.fullPathHash != damage ) {
 
@@ -147,11 +148,10 @@ public class PlayerController : MonoBehaviour {
         // 現在ANIMATOR状態を取得
         currentBaseState = animator.GetCurrentAnimatorStateInfo (0);
         var distanceFromGround = Physics2D.Raycast (transform.position, Vector3.down, 10, groundMask);
-        //Debug.DrawRay(transform.position, distanceFromGround.point - new Vector2( transform.position.x, transform.position.y ), Color.blue, 3, true);
         if ( !isDead ) {
             staminaSlider.value += 2 * Time.deltaTime;
         }
-        //Debug.Log( distanceFromGround.distance );
+
 		// update animator parameters
 		animator.SetFloat (hashGroundDistance, distanceFromGround.distance == 0 ? 99 : distanceFromGround.distance - characterHeightOffset);
 		animator.SetFloat (hashFallSpeed, rig2d.velocity.y);
@@ -179,9 +179,10 @@ public class PlayerController : MonoBehaviour {
 		}
 
         // 落下死亡判定
-        /*if ( gameObject.transform.position.y <= -4 ) {
+        if ( gameObject.transform.position.y <= fallOverPoint.transform.position.y ) {
            isDead = true;
-        }*/
+            Dead();
+        }
 
     }
 
@@ -193,9 +194,9 @@ public class PlayerController : MonoBehaviour {
 		for ( int i = 0; i < enemy.Length; i++ ) {        
             distanceCheckX = enemy[ i ].transform.position.x - transform.position.x;
             distanceCheckY = enemy[ i ].transform.position.y - transform.position.y;
-			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION ) &&
-                 ( ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= HITDIRETION ) ) {
-                if ( spriteRenderer.flipX != enemy[i].GetComponent<SpriteRenderer>().flipX ) {
+			if ( ( Mathf.Abs( distanceCheckX ) <= HITDIRETION ) && ( Mathf.Abs( distanceCheckY ) <= HITDIRETION ) ) {
+                if (  ( spriteRenderer.flipX == false && distanceCheckX >= 0 ) ||
+                      ( spriteRenderer.flipX == true && distanceCheckX <= 0 ) ) {
                     enemy[ i ].GetComponent<EnemyController>().Damage();
                 }
 			}
@@ -203,9 +204,9 @@ public class PlayerController : MonoBehaviour {
       
             distanceCheckX = boss.transform.position.x - transform.position.x;
             distanceCheckY = boss.transform.position.y - transform.position.y;
-			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION ) &&
-                 ( ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= HITDIRETION ) ) {
-                if ( spriteRenderer.flipX != boss.GetComponent<SpriteRenderer>().flipX ) {
+			if ( ( Mathf.Abs( distanceCheckX ) <= HITDIRETION ) && ( Mathf.Abs( distanceCheckY ) <= HITDIRETION ) ) {
+                if (  ( spriteRenderer.flipX == false && distanceCheckX >= 0 ) ||
+                      ( spriteRenderer.flipX == true && distanceCheckX <= 0 ) ) {
                     boss.GetComponent<BossController>().Damage( atk );
                 }
 			}
@@ -240,32 +241,11 @@ public class PlayerController : MonoBehaviour {
 
     }
 
-    // アイテム判定
-    private void ItemDecision() {
-        item = GameObject.FindGameObjectsWithTag("item");
-        for ( int i = 0; i < item.Length; i++ ) {
-            distanceCheckX = item[ i ].transform.position.x - transform.position.x;
-			distanceCheckY = transform.position.y - item[ i ].transform.position.y;
-			if( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION - 0.5f ) &&
-				  ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= 0.9f ) {
-				if ( item [i].gameObject.layer == 12 ) {
-					booldPressureSlider.value -= 50;
-					StatasInit ();
-				}
-				if ( item [i].gameObject.layer == 13 ) {
-					booldPressureSlider.value += 25;
-					staminaSlider.value += 50;
-				}
-				Destroy( item[ i ].gameObject );
-            }
-        }
-    }
-
     // プレイヤーステータス初期化
 	private void StatasInit( ) {
 		hypertensionSpeed = 0.08f;
 		healthSpeed = 0.1f;
-		hypertensionJumpPower = 8f;
+		hypertensionJumpPower = 9f;
 		healthJumpPower = 12.0f;
 		speed = healthSpeed;
 		jumpPower = healthJumpPower;
@@ -371,4 +351,23 @@ public class PlayerController : MonoBehaviour {
 	public void Dead() {
 		gameLogic.gameStatus = GameLogic.GAME_STATUS.Over;
 	}
+    
+    void OnCollisionEnter2D( Collision2D coll ) {
+        if ( coll.gameObject.tag == "item" ) {
+	        if ( coll.gameObject.layer == 12 ) {
+                itemController.ItemsPlus();
+	        }
+	        if ( coll.gameObject.layer == 13 ) {
+		        booldPressureSlider.value += 25;
+		        staminaSlider.value += 50;
+	        }
+	        Destroy( coll.gameObject );
+        }
+    }
+
+    public void CapsulesUse() {
+        booldPressureSlider.value -= 50;
+        staminaSlider.value -= 20;
+		StatasInit ();
+    }
 }

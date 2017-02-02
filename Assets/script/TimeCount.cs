@@ -3,11 +3,11 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class TimeCount : MonoBehaviour {
-    
-    [SerializeField]
-    Text minute;
 
     [SerializeField]
+    GameLogic gameLogic;
+    
+    Text minute;
     Text second;
 
     private const int SECOND_MAX = 60;
@@ -21,6 +21,7 @@ public class TimeCount : MonoBehaviour {
 
     void Awake() {
         timeOver = false;
+        gameLogic = GameObject.Find( "GameLogic" ).GetComponent<GameLogic>();
         minute = GameObject.Find( "Minute" ).GetComponent<Text>();
         second = GameObject.Find( "Second" ).GetComponent<Text>();
         minuteNow = 3.0f;
@@ -29,6 +30,11 @@ public class TimeCount : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        if( gameLogic.gameStatus != GameLogic.GAME_STATUS.Start ) {
+            return;
+        }
+
         if ( !timeOver ) {
             TimeCountUpdate( );
             TimeUpdate( );
