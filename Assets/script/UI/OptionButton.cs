@@ -64,7 +64,7 @@ public class OptionButton : MonoBehaviour {
 	}
 
     public void OnYesButtonClicked() {
-        fadeController.sceneName = "TitleMenu";
+        fadeController.sceneName = "Title";
         fadeController.fadeOutOver = true;
     }
 

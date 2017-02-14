@@ -8,7 +8,6 @@ public class TitleController : MonoBehaviour {
         OPTION,
         CREDIT,
         EXIT,
-        //OnStageIntroducePanel
         GO
     }
     [SerializeField]MoveController movieController;

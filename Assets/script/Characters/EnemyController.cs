@@ -52,12 +52,6 @@ public class EnemyController : MonoBehaviour {
 			return;
 		}
 		ActionController ();
-
-        /*if ( gameObject.layer == 14 ) {
-            if ( target.transform.position.x - gameObject.transform.position.x > 25 ) {
-                Destroy( gameObject );
-            }
-        }*/
 	}
 
 	private void ActionController() {
@@ -73,7 +67,7 @@ public class EnemyController : MonoBehaviour {
 					spriteRenderer.flipX = false;
 				}
 				float distanceCheckY = target.transform.position.y - transform.position.y;
-				if ( Mathf.Abs( distanceCheckY ) <= 0.8f) {
+				if ( Mathf.Abs( distanceCheckY ) <= 2.2f ) {
 					if (Mathf.Abs (distanceCheck) > HIT_DISTANCE &&
 					   Mathf.Abs (distanceCheck) <= FIND_DISTANCE &&
 					   currentBaseState.fullPathHash != attack) {
