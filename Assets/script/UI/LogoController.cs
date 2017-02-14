@@ -3,9 +3,7 @@ using System.Collections;
 
 public class LogoController : MonoBehaviour {
 
-    [SerializeField]
     public GameObject title;
-    [SerializeField]
     public GameObject backGround;
 
     private const float scalePos = 0.01f;

@@ -117,17 +117,7 @@ public class ResultsController : MonoBehaviour {
 	}
 
 	public void OnOverButtonClicked() {
-		fadeController.sceneName = "TitleMenu";
         fadeController.fadeOutOver = true;
+		fadeController.sceneName = "TitleMenu";
 	}
-
-    public void OnLoseButton( ) {
-        gameLogic.gameStatus = GameLogic.GAME_STATUS.Over;
-    }
-
-
-    public void OnClearButton( ) {
-        gameLogic.gameStatus = GameLogic.GAME_STATUS.Clear;
-    }
-
 }

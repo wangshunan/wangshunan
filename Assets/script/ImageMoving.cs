@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class ImageMoving : MonoBehaviour {
-    public static ImageMoving Instance {
+    public 
+        
+        ImageMoving Instance {
         set;
         get;
     }

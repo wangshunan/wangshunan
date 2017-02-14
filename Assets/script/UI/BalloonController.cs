@@ -30,7 +30,10 @@ public class BalloonController : MonoBehaviour {
 
 	private AnimatorStateInfo currentBaseState;
 
-	static int jump = Animator.StringToHash("Base Layer.Jump");
+
+
+
+    int jump = Animator.StringToHash("Base Layer.Jump");
 
 	void Awake() {
 		gameStatus = 0;

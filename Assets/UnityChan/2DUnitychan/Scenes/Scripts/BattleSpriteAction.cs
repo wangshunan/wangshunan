@@ -3,7 +3,10 @@ using System.Collections;
 
 public class BattleSpriteAction : MonoBehaviour
 {
-	static int hashSpeed = Animator.StringToHash ("Speed");
+
+
+
+    int hashSpeed = Animator.StringToHash ("Speed");
 	static int hashFallSpeed = Animator.StringToHash ("FallSpeed");
 	static int hashGroundDistance = Animator.StringToHash ("GroundDistance");
 	static int hashIsCrouch = Animator.StringToHash ("IsCrouch");

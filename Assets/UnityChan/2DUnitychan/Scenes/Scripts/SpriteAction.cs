@@ -3,7 +3,8 @@ using System.Collections;
 
 public class SpriteAction : MonoBehaviour
 {
-	static int hashSpeed = Animator.StringToHash ("Speed");
+
+    int hashSpeed = Animator.StringToHash ("Speed");
 	static int hashFallSpeed = Animator.StringToHash ("FallSpeed");
 	static int hashGroundDistance = Animator.StringToHash ("GroundDistance");
 
