@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour {
 	private float EnemyX;
 	private float distanceCheck;
 	float moveSpeed = 1.0f;
-	private const float HIT_DISTANCE = 1.5f;
+	private const float HIT_DISTANCE = 2f;
     private  const float FIND_DISTANCE = 10.0f;
 	private const int SECOND = 60;
 	private const float PASSIVE_X = 3.0f;
@@ -72,19 +72,22 @@ public class EnemyController : MonoBehaviour {
 				} else { 
 					spriteRenderer.flipX = false;
 				}
+				float distanceCheckY = target.transform.position.y - transform.position.y;
+				if ( Mathf.Abs( distanceCheckY ) <= 0.8f) {
+					if (Mathf.Abs (distanceCheck) > HIT_DISTANCE &&
+					   Mathf.Abs (distanceCheck) <= FIND_DISTANCE &&
+					   currentBaseState.fullPathHash != attack) {
 
-				if ( Mathf.Abs( distanceCheck ) > HIT_DISTANCE &&
-				     Mathf.Abs( distanceCheck ) <= FIND_DISTANCE &&
-				     currentBaseState.fullPathHash != attack) {
+						EnemyRd.transform.position += new Vector3 ((spriteRenderer.flipX == true ? -moveSpeed : moveSpeed) * Time.deltaTime, 0);
+						animator.SetBool ("Run", true);
 
-					EnemyRd.transform.position += new Vector3 ((spriteRenderer.flipX == true ? -moveSpeed : moveSpeed) * Time.deltaTime, 0);
-					animator.SetBool ("Run", true);
-
-				} else if ( Mathf.Abs( distanceCheck ) <= HIT_DISTANCE) {
-					animator.SetTrigger ("Attack");
-					animator.SetBool ("Run", false);
-				} else {
-					animator.SetBool ("Run", false);
+					} else if (Mathf.Abs (distanceCheck) <= HIT_DISTANCE) {
+						
+						animator.SetTrigger ("Attack");
+						animator.SetBool ("Run", false);
+					} else {
+						animator.SetBool ("Run", false);
+					}
 				}
 			}
 		}
@@ -113,7 +116,8 @@ public class EnemyController : MonoBehaviour {
 
 	void AttackDecision() {
         distanceCheck = target.transform.position.x - transform.position.x;
-        if ( Mathf.Abs( distanceCheck ) <= HIT_DISTANCE ) {
+		float distanceCheckY = target.transform.position.y - transform.position.y;
+		if ( Mathf.Abs( distanceCheck ) <= HIT_DISTANCE &&  Mathf.Abs( distanceCheckY ) <= 0.8f ) {
              if (  ( spriteRenderer.flipX == false && distanceCheck >= 0 ) ||
                    ( spriteRenderer.flipX == true && distanceCheck <= 0 ) ) {
 		        target.GetComponent<PlayerController> ().Damage (atk);

@@ -2,8 +2,10 @@
 using System.Collections;
 using UnityEngine.UI;
 
-
 public class BossController : MonoBehaviour {
+
+	[SerializeField]
+	GameLogic gameLogic;
 
 	Rigidbody2D EnemyRd;
     Animator animator;
@@ -28,16 +30,16 @@ public class BossController : MonoBehaviour {
 	private float distanceCheck;
     private float passivenessCount = 0.0f;
 	private float BossHp;
-	float moveSpeed = 1.0f;
-	const float HIT_DISTANCE = 1.5f;
-    const float FIND_DISTANCE = 6.5f;
+	float moveSpeed = 2.0f;
+	const float HIT_DISTANCE = 2f;
+    const float FIND_DISTANCE = 20f;
 	const float HP_MAX = 100;
 	const float HP_HALF = 50;
     private int pattern;
     private bool skill;
     private bool a = false;
     private bool skillSuitchi = false;
-	public GameObject HpSlider;
+	public Slider HpSlider;
 	public bool isDead;
 
     static int attack = Animator.StringToHash ( "Base Layer.Attack" );
@@ -46,22 +48,17 @@ public class BossController : MonoBehaviour {
     static int jump = Animator.StringToHash ( "Base Layer.Jump" );
 
 	void Awake() {
+		gameLogic = GameObject.Find( "GameLogic" ).GetComponent<GameLogic>( );
 		animator = GetComponent<Animator> ();
 		target = GameObject.Find ("Cguy");
 		EnemyRd = GetComponent<Rigidbody2D> ();
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		pattern = (int)PATTERN.USUALLY;
 		isDead = false;
-	}
-		
-
-	void Start() {
-		/*if (HpSlider.GetComponent<Slider>().value <= 0) {
-			pattern = (int)PATTERN.DEAD;
-		}*/
+		HpSlider.value = 100;
 	}
 
-	public void Controller() {
+	 void Update() {
 		
 		statusUpDate ();
 
@@ -80,23 +77,21 @@ public class BossController : MonoBehaviour {
 	}
 
 	public void Damage( float damage ) {
-		
-		// UI表示
-		if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck) <= FIND_DISTANCE ) {
-			HpSlider.SetActive (true);
-		}
 
-		HpSlider.GetComponent<Slider>().value -= damage;
-		if ( HpSlider.GetComponent<Slider>().value <= HP_HALF && skillSuitchi == false ) {  
+		HpSlider.value -= damage;
+		if ( HpSlider.value <= HP_HALF && skillSuitchi == false ) {  
             pattern = ( int )PATTERN.SKILL;
             skillSuitchi = true;
         } else {
 	        animator.SetTrigger ( "Damage" );
             passivenessCount += 1;
-			if ( passivenessCount >= 3.0f && HpSlider.GetComponent<Slider>().value > 0 ) {
+			if ( passivenessCount == 3.0f && HpSlider.GetComponent<Slider>().value > 0 ) {
 		        EnemyRd.velocity = new Vector2 ( distanceCheck > 0 ? 5.0f : -5.0f, 5.0f);
-                passivenessCount = 0.0f;
             }
+			if ( passivenessCount == 4.0f && HpSlider.GetComponent<Slider>( ).value > 0 ) {
+				pattern = ( int )PATTERN.SKILL;
+				passivenessCount = 0.0f;
+			}
         }
 	}
 
@@ -104,6 +99,7 @@ public class BossController : MonoBehaviour {
 		animator.SetTrigger ("DEAD");
 		isDead = true;
 		pattern = ( int )PATTERN.CLEAR;
+		gameLogic.gameStatus = GameLogic.GAME_STATUS.Clear;
 	}
 
     void Usually( ) {
@@ -116,9 +112,9 @@ public class BossController : MonoBehaviour {
         if ( currentBaseState.fullPathHash != damage && currentBaseState.fullPathHash != attack ) {
 
             if ( distanceCheck > 0.0f ) {
-                spriteRenderer.flipX = true ;
+				spriteRenderer.flipX = false ;
             } else { 
-                spriteRenderer.flipX = false ;
+				spriteRenderer.flipX = true ;
             }
 
             if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) > HIT_DISTANCE && 
@@ -126,7 +122,7 @@ public class BossController : MonoBehaviour {
                    currentBaseState.fullPathHash != attack2 &&
                    currentBaseState.fullPathHash != jump ) {
 
-                EnemyRd.transform.position += new Vector3( ( spriteRenderer.flipX == true ?  -moveSpeed : moveSpeed ) * Time.deltaTime, 0 );
+				EnemyRd.transform.position += new Vector3( ( spriteRenderer.flipX == false ?  -moveSpeed : moveSpeed ) * Time.deltaTime, 0 );
                 animator.SetBool( "Walk", true );
 
             } else if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE ) {
@@ -141,7 +137,7 @@ public class BossController : MonoBehaviour {
     }
 
 	void statusUpDate() {
-		if (HpSlider.GetComponent<Slider> ().value == 0) {
+		if (HpSlider.value == 0) {
 			animator.SetTrigger ("Dead");
 			pattern = (int)PATTERN.DEAD;
 		}
@@ -151,20 +147,19 @@ public class BossController : MonoBehaviour {
 
         if( a == false ) {
             animator.SetTrigger( "Jump" );
-            EnemyRd.velocity = new Vector2 ( distanceCheck > 0 ? 3.0f : -3.0f, 5.0f);
+            EnemyRd.velocity = new Vector2 ( 0, 5.0f);
             skill = true;
             a = true;
         }
 
         if( EnemyRd.velocity.y == 0.0f && skill == true ) {
-            animator.SetBool( "Rush", true );
-            EnemyRd.velocity = new Vector2( distanceCheck > 0 ? -7.0f : 7.0f, 0.0f );
+			animator.SetTrigger( "Rush" );
             skill = false;
         }
 
 
-        if ( EnemyRd.velocity.x == 0.0f && EnemyRd.velocity.y == 0.0f ) {
-            animator.SetBool( "Rush", false );
+		if ( currentBaseState.fullPathHash != attack2 && EnemyRd.velocity.y == 0.0f ) {
+			a = false;
             pattern = (int)PATTERN.USUALLY;
         }
 
@@ -172,16 +167,18 @@ public class BossController : MonoBehaviour {
 
 	void AttackDecision( ) {
         distanceCheck = target.transform.position.x - transform.position.x;
-        if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE && 
-            spriteRenderer.flipX != target.GetComponent< SpriteRenderer >().flipX ) {
-		    target.GetComponent<PlayerController> ().Damage (atk);
+		if ( Mathf.Abs( distanceCheck ) < HIT_DISTANCE ) {
+			if ( ( distanceCheck < 0 && spriteRenderer.flipX == false ) ||
+				 ( distanceCheck > 0 && spriteRenderer.flipX == true ) ) {
+				target.GetComponent<PlayerController>( ).Damage( atk );
+			}
         }
 	}
 
     void RushDecision( ) {
 
         distanceCheck = target.transform.position.x - transform.position.x;
-        if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE - 0.2f  ) { 
+        if ( ( distanceCheck > 0 ? distanceCheck : -distanceCheck ) <= HIT_DISTANCE ) { 
             target.GetComponent<PlayerController> ().Passiveness ( );
             target.GetComponent<PlayerController> ().Damage (atk + 5);
         }

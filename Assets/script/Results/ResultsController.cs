@@ -74,7 +74,11 @@ public class ResultsController : MonoBehaviour {
 		}
 
 		if ( clearImage.transform.position.y <= Screen.height * 0.5f ) {
-            fadeController.sceneName = "TalkingZako";
+			if ( SceneManager.GetSceneByName( "BossStage" ).isLoaded ) {
+				fadeController.sceneName = "TalkingBoss";
+			} else {
+				fadeController.sceneName = "TalkingZako";
+			}
             fadeController.fadeOutOver = true;
 		}
 	}

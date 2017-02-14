@@ -82,6 +82,8 @@ public class PlayerController : MonoBehaviour {
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		animator = GetComponent<Animator> ();
 		rig2d = GetComponent<Rigidbody2D> ();
+
+
 		StatasInit ();
 	}
 		
@@ -174,8 +176,14 @@ public class PlayerController : MonoBehaviour {
 		}
 
         if ( booldPressureSlider.value >= BOOLD_PRESSURE_MAX ) {
+			if (isDead) {
+				return;
+			}
 			animator.SetBool (hashDead, true);
 			isDead = true;
+			if (isDead) {
+				animator.SetTrigger (hashDamage);
+			}
 		}
 
         // 落下死亡判定
@@ -202,11 +210,11 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
       
-            distanceCheckX = boss.transform.position.x - transform.position.x;
-            distanceCheckY = boss.transform.position.y - transform.position.y;
-			if ( ( Mathf.Abs( distanceCheckX ) <= HITDIRETION ) && ( Mathf.Abs( distanceCheckY ) <= HITDIRETION ) ) {
-                if (  ( spriteRenderer.flipX == false && distanceCheckX >= 0 ) ||
-                      ( spriteRenderer.flipX == true && distanceCheckX <= 0 ) ) {
+            float bossDistanceCheckX = boss.transform.position.x - transform.position.x;
+            float bossDistanceCheckY = boss.transform.position.y - transform.position.y;
+		if ( ( Mathf.Abs( bossDistanceCheckX ) <= HITDIRETION ) ) {
+			if (  ( spriteRenderer.flipX == false && bossDistanceCheckX >= 0 ) ||
+				( spriteRenderer.flipX == true && bossDistanceCheckX <= 0 ) ) {
                     boss.GetComponent<BossController>().Damage( atk );
                 }
 			}
@@ -214,11 +222,12 @@ public class PlayerController : MonoBehaviour {
 		for ( int i = 0; i < block.Length; i++ ) {
             distanceCheckX = block[ i ].transform.position.x - transform.position.x;
             distanceCheckY = block[ i ].transform.position.y - transform.position.y;
-			if ( ( ( distanceCheckX > 0 ? distanceCheckX : -distanceCheckX ) <= HITDIRETION + 0.5f ) && 
-                 ( ( distanceCheckY > 0 ? distanceCheckY : -distanceCheckY ) <= HITDIRETION ) ) {
-                if ( ( distanceCheckX > 0 && spriteRenderer.flipX == false ) || 
-                     ( distanceCheckX < 0 && spriteRenderer.flipX == true ) ) {
-				    block[i].GetComponent<BlockController> ().BlockDestroyAni ();
+			if ( Mathf.Abs( distanceCheckX ) <= HITDIRETION + 2f && 
+				Mathf.Abs( distanceCheckY ) <= HITDIRETION   )  {
+				if ( ( distanceCheckX > 0 && spriteRenderer.flipX == false ) || 
+					( distanceCheckX < 0 && spriteRenderer.flipX == true ) ) {
+					Destroy (block [i].gameObject);
+
                     Debug.Log( "" + i );
 					//soundManager.PlaySeBlock ();
                 }
