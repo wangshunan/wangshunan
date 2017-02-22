@@ -55,7 +55,6 @@ public class BossController : MonoBehaviour {
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		pattern = (int)PATTERN.USUALLY;
 		isDead = false;
-        HpSlider = GameObject.Find("BossHp").GetComponent<Slider>();
 	}
 
 	 void Update() {

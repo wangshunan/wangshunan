@@ -10,6 +10,9 @@ public class StageClearEvent : MonoBehaviour {
     [SerializeField]
     GameLogic gameLogic;
 
+    [SerializeField]
+    FadeManager fadeController;
+
 
 	// Use this for initialization
 	void Awake () {
@@ -25,6 +28,8 @@ public class StageClearEvent : MonoBehaviour {
     void OnTriggerEnter2D( Collider2D coll) {
 
         if ( coll.gameObject.tag == ("Player") ) {
+            fadeController.fadeOutOver = true;
+            fadeController.sceneName = "TalkingZako";
             gameLogic.gameStatus = GameLogic.GAME_STATUS.Clear;
 			Destroy( gameObject.GetComponent<BoxCollider2D>() );
         }

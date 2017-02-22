@@ -30,7 +30,7 @@ public class FadeManager: MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	    FadeIn();
-        FadeOut();
+        FadeOut( );
 	}
 
     void FadeIn() {

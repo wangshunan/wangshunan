@@ -64,6 +64,7 @@ public class OptionButton : MonoBehaviour {
 	}
 
     public void OnYesButtonClicked() {
+        pause.GameResume();
         fadeController.sceneName = "Title";
         fadeController.fadeOutOver = true;
     }
